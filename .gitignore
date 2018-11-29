@@ -1,0 +1,5 @@
+*.pyc
+*.pyo
+
+tasks/*/data
+tasks/*/events
