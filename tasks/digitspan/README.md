@@ -2,8 +2,6 @@
 
 A classic digit-span task for expyriment.
 
-![Screencast of the first few trials of a Digit Span Task with standard configuration](/media/screencast-digitspan.gif)
-
 ## Configuration
 
 The experiment can be configured in the _config.conf_ file distributed alongside the task.
@@ -74,3 +72,9 @@ The available fields that can be logged are as follows:
     - `similarity` : a similarity score calculated as _2 * M / T_ with _M = number of matching digits/characters_ and _T = length of the answer + length of the presented sequence_
 
 [^difflib]: Note that all values apart from whether a sequence is correct are computed using the python difflib; please consult [its documentation](https://docs.python.org/2.7/library/difflib.html) for any queries on how these values come into place.
+
+## Example
+
+A screencast of the first few trials of a Digit Span Task with standard configuration.
+
+![Screencast of the first few trials of a Digit Span Task with standard configuration](/media/screencast-digitspan.gif)
