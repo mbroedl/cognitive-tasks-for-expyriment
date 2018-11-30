@@ -268,6 +268,21 @@ class BaseExpyriment(design.Experiment):
                     col_names=keys)
             self.dev_log.add(log_values_to_cols(keys, args))
 
+    def prepare_button_boxes(self, labels):
+        buttons = []
+        for i, lb in enumerate(labels):
+            width, height = self.screen.window_size
+            size = (width / len(labels), self._unit(self.config.get('APPEARANCE', 'button_height')))
+            pos = (int(size[0] * (i - len(labels) / 2.0 + 0.5)), -(height - size[1]) / 2)
+            btn = stimuli.Rectangle(size=size, position=pos, colour=self._colours(self.config.get('APPEARANCE', 'button_background_colour')))
+            stimuli.Rectangle(size=size, line_width=5, colour=self._colours(self.config.get('APPEARANCE', 'button_border_colour'))).plot(btn)
+            text = stimuli.TextLine(text=lb, text_colour=self._colours(self.config.get('APPEARANCE', 'button_text_colour')))
+            text.plot(btn)
+            btn.label = lb
+            btn.preload()
+            buttons.append(btn)
+        return(buttons)
+
 def _clickable_numeric_input(title, start_at):
     # copied from the 0.7.0 release of expyriment
     # https://github.com/expyriment/expyriment/blob/81acb8be1a2abcecdbbfe501e9c4f662c9ba6620/expyriment/control/_experiment_control.py#L96
