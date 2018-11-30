@@ -462,7 +462,7 @@ class CustomConfigParser(RawConfigParser):
 
     def gettuple(self, section, option, default=None, assert_length=None, allow_single=False, cast_float=False):
         value = self.get(section, option, default).strip()
-        if value == 'None':
+        if value.lower() == 'none' or value == '':
             return(None)
         if value[0] in '[(' and value[-1] in ')]':
             value = value[1:-1]
