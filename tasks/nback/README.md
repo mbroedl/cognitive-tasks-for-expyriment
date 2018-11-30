@@ -119,4 +119,4 @@ The available fields that can be logged are as follows:
 
 A screencast of the N-Back Task with standard settings and 5 trials.
 
-![Screencast of the N-Back Task with standard configuration](/media/screencast-rt-simple.gif)
+![Screencast of the N-Back Task with standard configuration](../../media/screencast-nback.gif)

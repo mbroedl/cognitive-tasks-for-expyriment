@@ -87,4 +87,4 @@ canvas_size = 0.9
 A screencast of the Reaction Time Task.
 Simple, as it is supposed to be.
 
-![Screencast of the first few trials of a Digit Span Task with standard configuration](/media/screencast-rt-simple.gif)
+![Screencast of the first few trials of a Digit Span Task with standard configuration](../../media/screencast-rt-simple.gif)

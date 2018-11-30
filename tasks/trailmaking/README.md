@@ -163,4 +163,4 @@ These further items can be aggregated in the experiment summary if required.
 
 A screencast of a trail-making task with standard settings, 20 targets and the order _1-A-2-B-3-C-..._
 
-    ![Screencast of the first few trials of a Trail-Making Task with standard configuration](/media/screencast-trailmaking.gif)
+![Screencast of the first few trials of a Trail-Making Task with standard configuration](../../media/screencast-trailmaking.gif)

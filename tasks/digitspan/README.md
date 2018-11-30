@@ -77,4 +77,4 @@ The available fields that can be logged are as follows:
 
 A screencast of the first few trials of a Digit Span Task with standard configuration.
 
-![Screencast of the first few trials of a Digit Span Task with standard configuration](/media/screencast-digitspan.gif)
+![Screencast of the first few trials of a Digit Span Task with standard configuration](../../media/screencast-digitspan.gif)
