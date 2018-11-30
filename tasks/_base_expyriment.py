@@ -38,6 +38,15 @@ COLOURS = {
     'magenta' : (255, 0, 255)
 }
 
+DEFAULTS = {
+    'button_height' : '20mm',
+    'button_background_colour' : (0, 0, 0),
+    'button_border_colour' : (80, 80, 80),
+    'button_text_colour' : 'white',
+    'button_highlight_colour' : (255, 200, 200),
+    'button_highlight_duration' : 50
+}
+
 # PATCHING THE CIRCLE DIAMETER/RADIUS INCOMPATIBILITY
 
 _Circle_init = stimuli.Circle.__init__
@@ -113,8 +122,10 @@ class BaseExpyriment(design.Experiment):
         control.end()
 
     def _load_config(self, defaults = {}):
-        defaults = {k: str(v) for k, v in defaults.items()}
-        self.config = CustomConfigParser(defaults)
+        d1 = DEFAULTS.copy()
+        d1.update(defaults)
+        d1 = {k: str(v) for k, v in d1.items()}
+        self.config = CustomConfigParser(d1)
         self.config.read(['config.conf', 'i18n.conf'])
 
         global i18n
