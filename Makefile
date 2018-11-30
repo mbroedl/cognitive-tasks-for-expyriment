@@ -3,7 +3,9 @@ COMPILER_OUTPUT = --output-file
 
 EXPERIMENTS = \
 	digitspan \
-	trailmaking
+	trailmaking \
+	rt_simple \
+	nback
 
 RELEASE = $(shell date +%Y-%M-%d)
 
