@@ -5,3 +5,4 @@ tasks/*/data
 tasks/*/events
 
 build
+site
