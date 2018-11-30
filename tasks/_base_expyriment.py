@@ -244,6 +244,7 @@ class BaseExpyriment(design.Experiment):
                 directory=io.defaults.datafile_directory,
                 col_names=col_names)
         self.block_log.add(log_values_to_cols(col_names, args))
+        return(args)
 
     def _log_experiment(self, *argv):
         if not self.config.has_option('LOG', 'cols_experiment') or not self.config.has_option('LOG', 'expriment_summary_file'):
