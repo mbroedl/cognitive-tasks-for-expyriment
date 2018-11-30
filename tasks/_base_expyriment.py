@@ -23,6 +23,21 @@ except ImportError:
 
 fallback_dpi = 96
 
+COLOURS = {
+    'black' : (0, 0, 0),
+    'blue' : (0, 0, 255),
+    'darkgrey' : (150, 150, 150),
+    'expyriment_orange' : (255, 150, 50),
+    'expyriment_purple' : (160, 70, 250),
+    'green' : (0, 255, 0),
+    'grey' : (200, 200, 200),
+    'red' : (255, 0, 0),
+    'white' : (255, 255, 255),
+    'yellow' : (255, 255, 0),
+    'cyan' : (0, 255, 255),
+    'magenta' : (255, 0, 255)
+}
+
 # PATCHING THE CIRCLE DIAMETER/RADIUS INCOMPATIBILITY
 
 _Circle_init = stimuli.Circle.__init__
@@ -160,6 +175,37 @@ class BaseExpyriment(design.Experiment):
             elif 'cm' == screen_diagonal[-2:] and not ',' in screen_diagonal:
                 return(int((width**2 + height**2)**0.5 / (float(screen_diagonal[:-2]) / 2.54)))
         return(self.config.getint('GENERAL', 'fallback_dpi') if self.config.has_option('GENERAL', 'fallback_dpi') else fallback_dpi)
+
+    @staticmethod
+    def _colours(colour):
+        if colour.strip() == "" or colour.lower() == "none":
+            return(None)
+        if colour in COLOURS:
+            return(COLOURS[colour])
+        if ',' in colour:
+            elements = colour.replace('(', '').replace(')', '').replace('[', '').replace(']', '').split(',')
+            colours = []
+            while len(elements) > 0:
+                elements[0] = elements[0].strip()
+                if elements[0] in COLOURS:
+                    colours.append(COLOURS[elements.pop(0)])
+                else:
+                    try:
+                        colours.append([int(c) for c in elements[:3]])
+                        elements = elements[3:]
+                    except ValueError:
+                        raise ValueError('"{}" does not represent one or more colours.'.format(colour))
+            if len(colours) == 1:
+                return(colours[0])
+            return(colours)
+        raise ValueError('"{}" does not represent one or more colours.'.format(colour))
+
+    @staticmethod
+    def _invert_colour(colour):
+        if python_version[0] == 3:
+            return({v: k for k, v in COLOURS.items()}[colour])
+        else:
+            return({v: k for k, v in COLOURS.iteritems()}[colour])
 
     def _log_trial(self, *argv):
         if not self.config.has_option('LOG', 'cols_trial'):
