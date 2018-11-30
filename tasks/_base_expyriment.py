@@ -110,6 +110,8 @@ class BaseExpyriment(design.Experiment):
             self._dev_mode = True
 
     def _show_message(self, caption, text, format={}):
+        if caption == 'SKIP' or text == 'SKIP':
+            return()
         stimuli.TextScreen(_(caption).format(**format), _(text).format(**format)).present()
         if android:
             self.mouse.wait_press()
