@@ -1,5 +1,13 @@
 # Release Notes
 
-Currently there are no releases available.
-I will make them available as soon as possible to download.
-If you cannot wait, make sure to just check the [repository](https://github.com/mbroedl/cognitive-tasks-for-expyriment/).
+## 0.1.0 Initial Release (2018-11-30)
+
+Four tasks added:
+
+- Simple Reaction Time Task
+- N-Back Task
+- Trailmaking Task
+- Digit Span Task
+
+Plus a boilerplate for more experiments.
+Currently, there are no tutorials or practice sessions implemented.
