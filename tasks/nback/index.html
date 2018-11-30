@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A battery of Cognitive Tasks for Expyriment. Suitable for android and desktop environments."> 
+    <meta name="author" content="github/mbroedl"> 
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    <title>N-Back - Cognitive Tasks for Expyriment</title>
+
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.018/css/hack.min.css">
+    <link href='//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../css/base.css" rel="stylesheet">
+    <link href="../../css/cinder.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+
+
+    <link href="../../css/custom.css" rel="stylesheet">
+
+
+    <link href="../../css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+    <script>
+    WebFont.load({
+        google: {
+            families: ['Open Sans', 'PT Sans']
+        }
+    });
+    </script>
+
+    
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            <a class="navbar-brand" href="../..">Cognitive Tasks for Expyriment</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">How To <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../../howto/install/">Installation</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../howto/configuration/">Configuration</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../howto/translations/">Instructions and Languages</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../howto/logs/">Creating Logs</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../howto/developing/">Developing or Modifying</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tasks <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../rt_simple/">Simple Reaction Time Task</a>
+</li>
+
+                        
+                            
+<li class="active">
+    <a href="./">N-Back</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../trailmaking/">Trail Making Task</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../digitspan/">Digit Span Task</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../../about/using-and-citing/">Using and Citing</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../about/release-notes/">Release Notes</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="https://github.com/mbroedl/cognitive-tasks-for-expyriment/releases">Download</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fa fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="next" href="../rt_simple/">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../trailmaking/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/mbroedl/cognitive-tasks-for-expyriment/edit/master/docs/tasks/nback.md"><i class="fa fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#configuration">Configuration</a></li>
+            <li class="second-level"><a href="#experiment-design">Experiment Design</a></li>
+                
+            <li class="second-level"><a href="#appearance">Appearance</a></li>
+                
+            <li class="second-level"><a href="#logging-the-experiment">Logging the Experiment</a></li>
+                
+        <li class="first-level "><a href="#example">Example</a></li>
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
+<h3 id="experiment-design">Experiment Design<a class="headerlink" href="#experiment-design" title="Permanent link">#</a></h3>
+<p>The experiment design is covered in the <code>[DESIGN]</code> section of the config file.</p>
+<div class="codehilite"><pre><span></span><span class="k">[DESIGN]</span>
+<span class="c1">## number of blocks</span>
+<span class="na">blocks</span> <span class="o">=</span> <span class="s">3</span>
+
+<span class="c1">## all of the following values can be one of these values to</span>
+<span class="c1">## repeat for all blocks, or as many values as there</span>
+<span class="c1">## are blocks and separated by commas; in case of two blocks:</span>
+<span class="c1">## e.g. target_titles = 123 OR target_titles = 123, abc</span>
+<span class="c1">## three values for two blocks or vice versa causes an error</span>
+
+<span class="c1">## amount of trials (i.e. trails to make per block)</span>
+<span class="na">trials</span> <span class="o">=</span> <span class="s">20</span>
+
+<span class="c1">## default numbers of trials to look back at</span>
+<span class="na">nback</span> <span class="o">=</span> <span class="s">2</span>
+<span class="c1">## default mode, string with any one or more of PC</span>
+<span class="c1">## P = Position</span>
+<span class="c1">## C = Colour</span>
+<span class="na">nback_mode</span> <span class="o">=</span> <span class="s">PC</span>
+
+<span class="c1">## probability of having one characteristic repeated</span>
+<span class="na">repeat_probability</span> <span class="o">=</span> <span class="s">0.3</span>
+
+<span class="c1">## after here everything is universal for all blocks again</span>
+
+<span class="c1">## number of boxes in the grid; they will be arranged in a</span>
+<span class="c1">## square, so a square number is advantageous</span>
+<span class="na">num_boxes</span> <span class="o">=</span> <span class="s">9</span>
+
+<span class="c1">## colours to vary, can be any of:  black, blue, darkgrey,</span>
+<span class="c1">## expyriment_orange, expyriment_purple, green, grey, red,</span>
+<span class="c1">## white, yellow, cyan, magenta or RGB colour codes such as</span>
+<span class="c1">## (255, 0, 0) for red, separated by commas</span>
+<span class="na">colours</span> <span class="o">=</span> <span class="s">magenta, green, cyan</span>
+
+<span class="c1">## the duration of stimuli display [ms]</span>
+<span class="na">display_duration</span> <span class="o">=</span> <span class="s">3000</span>
+<span class="c1">## min and max duration of the break in between to stimuli [ms]</span>
+<span class="na">break_duration</span> <span class="o">=</span> <span class="s">500, 2000</span>
+</pre></div>
+
+
+<p>Optional values and their default values are:</p>
+<div class="codehilite"><pre><span></span><span class="c1">## indicate whether or not to change the NBack level</span>
+<span class="na">change_nback_level</span> <span class="o">=</span> <span class="s">no</span>
+<span class="c1">## lower threshold of the ratio of trials that have to be</span>
+<span class="c1">## correct, after which the NBack level is increased</span>
+<span class="c1">## (checked as bigger or equal than)</span>
+<span class="na">increase_nback_correct_ratio</span> <span class="o">=</span> <span class="s">0.8</span>
+<span class="c1">## upper threshold of the ratio of trials that have to be</span>
+<span class="c1">## correct, after which the NBack level is decreased</span>
+<span class="c1">## (checked as smaller than)</span>
+<span class="na">decrease_nback_correct_ratio</span> <span class="o">=</span> <span class="s">0.5</span>
+</pre></div>
+
+
+<h3 id="appearance">Appearance<a class="headerlink" href="#appearance" title="Permanent link">#</a></h3>
+<p>The experiment appearance is covered in the <code>[APPEARANCE]</code> section of the configuration file; there are no required arguments.
+In the following, the default options are listed.</p>
+<div class="codehilite"><pre><span></span><span class="k">[APPEARANCE]</span>
+<span class="c1">## size of the grid relative to smallest screen dimension</span>
+<span class="c1">## the button_height will be reduced on either side of the</span>
+<span class="c1">## screen so it is centred</span>
+<span class="na">canvas_size</span> <span class="o">=</span> <span class="s">0.9</span>
+
+<span class="c1">## line width for the grid to be drawn</span>
+<span class="na">grid_line_width</span> <span class="o">=</span> <span class="s">1mm</span>
+
+<span class="c1">## set antialiasing so that things appear a bit sharper</span>
+<span class="na">antialiasing</span> <span class="o">=</span> <span class="s">True</span>
+
+<span class="c1">## the colour of grid and fixation cross</span>
+<span class="na">colour_grid</span> <span class="o">=</span> <span class="s">(255, 255, 255)</span>
+<span class="na">colour_fixation_cross</span> <span class="o">=</span> <span class="s">None</span>
+
+<span class="c1">## the height of the buttons to be pressed;</span>
+<span class="c1">## the width will be based on the screen width divided by the</span>
+<span class="c1">## amount of labels</span>
+<span class="na">button_height</span> <span class="o">=</span> <span class="s">20mm</span>
+<span class="c1">## background, border, and text colour of the button</span>
+<span class="na">button_background_colour</span> <span class="o">=</span> <span class="s">(0, 0, 0)</span>
+<span class="na">button_border_colour</span> <span class="o">=</span> <span class="s">(80, 80, 80)</span>
+<span class="na">button_text_colour</span> <span class="o">=</span> <span class="s">white</span>
+<span class="c1">## the button is highlighted when pressed; this defines the</span>
+<span class="c1">## highlighting colour (for the inner edges)</span>
+<span class="c1">## as well as the duration [ms]</span>
+<span class="na">button_highlight_colour</span> <span class="o">=</span> <span class="s">(255, 255, 255)</span>
+<span class="na">button_highlight_duration</span> <span class="o">=</span> <span class="s">50</span>
+</pre></div>
+
+
+<h3 id="logging-the-experiment">Logging the Experiment<a class="headerlink" href="#logging-the-experiment" title="Permanent link">#</a></h3>
+<p>What should be logged is described in the <code>[LOG]</code> section of the configuration file.
+For a general overview on their configuration, see <a href="../../howto/logs/">here</a>.
+The available fields that can be logged are as follows:</p>
+<ul>
+<li>settings for the block: <code>nback</code>, <code>nback_mode</code>, <code>trials</code>, <code>repeat_probability</code></li>
+<li>computed data per trial: <code>P</code> (position of the stimulus), <code>C</code> (colour of the stimulus), <code>wait</code> (time before stimulus is shown), <code>repeat</code> (whether and which a component is repeated)</li>
+<li>the user response: <code>rt</code> (reaction time), <code>pressed_any</code> (0/1, whether any button was pressed), <code>pressed</code> (which button was pressed)</li>
+<li>analyses of the user response:<ul>
+<li><code>correct</code> (0/1),</li>
+<li><code>incorrect</code> (0/1)</li>
+<li><code>correct_repeat</code> (0/1, whether a repeat trial was correctly identified)</li>
+<li><code>falsebutton</code> (0/1, whether a false button was pressed)</li>
+<li><code>missedpositive</code> (0/1, whether a repeat trial was missed)</li>
+<li><code>falsepositive</code> (0/1, whether a button was pressed although it should not have been)</li>
+</ul>
+</li>
+</ul>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h2>
+<p>A screencast of the N-Back Task with standard settings and 5 trials.</p>
+<p><img alt="Screencast of the N-Back Task with standard configuration" src="/media/screencast-rt-simple.gif" /></p></div>
+        
+        
+    </div>
+
+    <footer class="col-md-12 text-center">
+        <hr>
+        <p>
+        <small>All experiments here are licensed under the <a href='https://github.com/mbroedl/cognitive-tasks-for-expyriment/COPYING'>GPLv3 license</a>.<br />If you use any of these experiments for scientific publications, please <a href='/about/using-and-citing/'>cite the authors</a>.<br></small>
+        
+        <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p></small>
+    </footer>
+
+    <script src="../../js/jquery-1.10.2.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+    var base_url = '../..';
+    </script>
+    <script data-main="../../mkdocs/js/search.js" src="../../mkdocs/js/require.js"></script>
+    <script src="../../js/base.js"></script>
+    <script src="../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        From here you can search these documents. Enter your search terms below.
+                    </p>
+                    <form role="form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                        </div>
+                    </form>
+                    <div id="mkdocs-search-results"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </body>
+
+</html>

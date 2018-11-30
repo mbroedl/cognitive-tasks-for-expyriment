@@ -1,0 +1,21 @@
+.navbar-collapse {
+    font-size: 1.2em;
+}
+
+.headerlink {
+    display: none;
+    margin-left: 0.5em;
+    opacity: 0.5;
+}
+.headerlink:hover {
+    text-decoration: none;
+    opacity: 1;
+}
+h1:hover .headerlink, h2:hover .headerlink,
+    h3:hover .headerlink, h4:hover .headerlink {
+    display: inline;
+}
+
+.footnote {
+    font-size: 0.8em;
+}

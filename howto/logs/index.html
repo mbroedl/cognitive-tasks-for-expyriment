@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A battery of Cognitive Tasks for Expyriment. Suitable for android and desktop environments."> 
+    <meta name="author" content="github/mbroedl"> 
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    <title>Creating Logs - Cognitive Tasks for Expyriment</title>
+
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.018/css/hack.min.css">
+    <link href='//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../css/base.css" rel="stylesheet">
+    <link href="../../css/cinder.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+
+
+    <link href="../../css/custom.css" rel="stylesheet">
+
+
+    <link href="../../css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+    <script>
+    WebFont.load({
+        google: {
+            families: ['Open Sans', 'PT Sans']
+        }
+    });
+    </script>
+
+    
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            <a class="navbar-brand" href="../..">Cognitive Tasks for Expyriment</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">How To <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../install/">Installation</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../configuration/">Configuration</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../translations/">Instructions and Languages</a>
+</li>
+
+                        
+                            
+<li class="active">
+    <a href="./">Creating Logs</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../developing/">Developing or Modifying</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tasks <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../../tasks/rt_simple/">Simple Reaction Time Task</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../tasks/nback/">N-Back</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../tasks/trailmaking/">Trail Making Task</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../tasks/digitspan/">Digit Span Task</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../../about/using-and-citing/">Using and Citing</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../about/release-notes/">Release Notes</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="https://github.com/mbroedl/cognitive-tasks-for-expyriment/releases">Download</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fa fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="next" href="../translations/">
+                            <i class="fa fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../developing/">
+                            Next <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/mbroedl/cognitive-tasks-for-expyriment/edit/master/docs/howto/logs.md"><i class="fa fa-github"></i> Edit on GitHub</a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#logging-experimental-outputs">Logging Experimental Outputs</a></li>
+            <li class="second-level"><a href="#defining-log-fields">Defining Log Fields</a></li>
+                
+                <li class="third-level"><a href="#variables">Variables</a></li>
+                <li class="third-level"><a href="#aggregation">Aggregation</a></li>
+                <li class="third-level"><a href="#filters">Filters</a></li>
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="logging-experimental-outputs">Logging Experimental Outputs<a class="headerlink" href="#logging-experimental-outputs" title="Permanent link">#</a></h1>
+<p>The <code>[LOG]</code> section in every experiment configuration file sets the column names and desired variables for logging.
+There is three different output files which can be enabled or disabled as desired:
+(1) trial-by-trial outputs for individual sessions;
+(2) a summary file recording summaries of experiment blocks;
+(3) a summary file recording summaries of the whole session.</p>
+<p>By default, <em>subject</em> and <em>session</em> ids are logged to every output file, <em>block</em> id to (1) and (2), and <em>trial</em> id in (1).</p>
+<p>There is two configuration fields per output, one defining the column names and variables (<code>cols_*</code>), the other one the file name (<code>*_file_name</code>).
+An output is disabled if the output columns or the output file are commented (i.e. preceded by a <code>#</code>);
+only when both are present are they enabled.
+Note that the file name of the trial-by-trial log differs per participant as each participant&rsquo;s data is logged separately.</p>
+<h2 id="defining-log-fields">Defining Log Fields<a class="headerlink" href="#defining-log-fields" title="Permanent link">#</a></h2>
+<h3 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link">#</a></h3>
+<p>Every experiment has its own set of available variables which are listed in the respective config file, and are further described in the respective documentation for the experiment.</p>
+<h3 id="aggregation">Aggregation<a class="headerlink" href="#aggregation" title="Permanent link">#</a></h3>
+<p>In the block and experiment output, the values can be aggregated or pre-computed by using aggregation functions.
+They combine all previously logged data into one output value.
+For example to get the average length of a sequence you could use <code>mean(sequence_length)</code>, or to get the number of correct trials, or the average length of incorrect trials <code>mean(sequence_length[correct!=True])</code>.
+The following functions are provided:</p>
+<ul>
+<li><code>len</code> : number of recorded answers, e.g. correct ones</li>
+<li><code>max</code>, <code>min</code> : maximum or minimum value</li>
+<li><code>mean</code>, <code>avg</code>, <code>sum</code> : mean/average, sum of a list of numbers</li>
+<li><code>sd</code>, <code>var</code> : standard deviation and variance of a list of numbers</li>
+</ul>
+<p>Further, for individual values, the functions <code>abs</code> for the absolute value, and <code>len</code> for the length of a string, such as the user_input, can be used.</p>
+<p><strong>Note</strong> that as of now, functions cannot be nested or combined, so none of the following examples would work: <code>mean(len(sequence))</code>, <code>mean(similarity) - sd(similarity)</code></p>
+<h3 id="filters">Filters<a class="headerlink" href="#filters" title="Permanent link">#</a></h3>
+<p>Sometimes in aggregation, one only wants to count specific items, which is why there are some filters provided, that can be applied in square brackets.
+Currently, three modes of filtering are implemented:</p>
+<ul>
+<li><code>abc(xyz[field])</code> : to filter for non-False/non-empty items in field</li>
+<li><code>abc(xyz[correct==True])</code> or <code>abc(xyz[sequence_length==5])</code> :
+to filter for correct items (True) or those of length 5</li>
+<li><code>abc(xyz[correct!=True])</code> or <code>abc(xyz[sequence_length!=5])</code> : to filter for incorrect items (not True) or those
+   other than length five</li>
+</ul>
+<!-- TODO: introduce >, >=, <, <= --></div>
+        
+        
+    </div>
+
+    <footer class="col-md-12 text-center">
+        <hr>
+        <p>
+        <small>All experiments here are licensed under the <a href='https://github.com/mbroedl/cognitive-tasks-for-expyriment/COPYING'>GPLv3 license</a>.<br />If you use any of these experiments for scientific publications, please <a href='/about/using-and-citing/'>cite the authors</a>.<br></small>
+        
+        <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p></small>
+    </footer>
+
+    <script src="../../js/jquery-1.10.2.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+    var base_url = '../..';
+    </script>
+    <script data-main="../../mkdocs/js/search.js" src="../../mkdocs/js/require.js"></script>
+    <script src="../../js/base.js"></script>
+    <script src="../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        From here you can search these documents. Enter your search terms below.
+                    </p>
+                    <form role="form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                        </div>
+                    </form>
+                    <div id="mkdocs-search-results"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </body>
+
+</html>
