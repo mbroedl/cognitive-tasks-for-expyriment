@@ -21,6 +21,8 @@ try:
 except ImportError:
     android = None
 
+fallback_dpi = 96
+
 # PATCHING THE CIRCLE DIAMETER/RADIUS INCOMPATIBILITY
 
 _Circle_init = stimuli.Circle.__init__
@@ -30,6 +32,8 @@ class _Circle(stimuli.Circle):
             diameter = 2 * radius
         if diameter and not radius:
             radius = diameter / 2
+        if anti_aliasing is True:
+            anti_aliasing = 10
         if expyriment_version >= [0,8]:
             _Circle_init(self, radius, anti_aliasing=anti_aliasing, *args, **kwargs)
         else:
@@ -58,6 +62,10 @@ class BaseExpyriment(design.Experiment):
         design.Experiment.__init__(self, _('title'))
         control.set_develop_mode(self._dev_mode)
 
+        if self.config.has_option('GENERAL', 'window_size') and not self._dev_mode:
+            control.defaults.window_size = self.config.gettuple('GENERAL', 'window_size', assert_length=2)
+        if self.config.has_option('GENERAL', 'fullscreen') and not self._dev_mode:
+            control.defaults.window_mode =  self.config.getboolean('GENERAL', 'fullscreen')
         control.initialize(self)
         if self._dev_mode:
             self.mouse.show_cursor()
@@ -70,6 +78,8 @@ class BaseExpyriment(design.Experiment):
         self.block_log = None
         self.experiment_log = None
         self.dev_log = None
+
+        self.screen.dpi = self._get_dpi()
 
     def _start(self):
         self._session = None
@@ -105,6 +115,49 @@ class BaseExpyriment(design.Experiment):
             self.mouse.wait_press()
         else:
             self.keyboard.wait()
+
+    def _in2px(self, size, scale=1):
+        if type(size) == str:
+            size = float(size)
+        if type(size) in (float, int):
+            return(self.screen.dpi * size / scale)
+        elif type(size) in (tuple, list):
+            return([self.screen.dpi * s / scale for s in size])
+
+    def _cm2px(self, size):
+        return(self._unit2px(size, 'cm'))
+
+    def _mm2px(self, size):
+        return(self._unit2px(size, 'mm'))
+
+    def _unit2px(self, size, unit):
+        map_units = {'in': 1, 'cm': 2.54, 'mm': 25.4}
+        return(self._in2px(size, map_units[unit]))
+
+    def _unit(self, unit):
+        if type(unit) in (int, float):
+            return(unit)
+        try:
+            return(float(unit))
+        except ValueError:
+            if ',' in unit:
+                return([self._unit(u) for u in unit.split(',')])
+            return(self._unit2px(float(unit[:-2]), unit[-2:]))
+
+    def _get_dpi(self):
+        if self.config.has_option('GENERAL', 'dpi'):
+            return(self.config.getint('GENERAL', 'dpi'))
+        if android:
+            return(android.get_dpi())
+        if self.config.has_option('GENERAL', 'screen_diagonal'):
+            # NOTE: assuming full screen mode!
+            screen_diagonal = self.config.get('GENERAL', 'screen_diagonal')
+            width, height = self.screen.window_size
+            if 'in' == screen_diagonal[-2:] and not ',' in screen_diagonal:
+                return(int((width**2 + height**2)**0.5 / float(screen_diagonal[:-2])))
+            elif 'cm' == screen_diagonal[-2:] and not ',' in screen_diagonal:
+                return(int((width**2 + height**2)**0.5 / (float(screen_diagonal[:-2]) / 2.54)))
+        return(self.config.getint('GENERAL', 'fallback_dpi') if self.config.has_option('GENERAL', 'fallback_dpi') else fallback_dpi)
 
     def _log_trial(self, *argv):
         if not self.config.has_option('LOG', 'cols_trial'):
@@ -405,9 +458,19 @@ class CustomConfigParser(RawConfigParser):
             else:
                 raise err
 
-    def gettuple(self, section, option, default=None, assert_length=None):
-        value = self.get(section, option, default)
-        t = tuple(literal_eval(value))
-        if not assert_length is None and len(t) != assert_length:
-            raise ValueError('Configuration option [{}]:{} needs to have exactly {} elements.'.format(section, option, assert_length))
-        return(t)
+    def gettuple(self, section, option, default=None, assert_length=None, allow_single=False, cast_float=False):
+        value = self.get(section, option, default).strip()
+        if value == 'None':
+            return(None)
+        if value[0] in '[(' and value[-1] in ')]':
+            value = value[1:-1]
+        t = [v.strip() for v in value.split(',') if v.strip()]
+        try:
+            t = [float(v) for v in t] if cast_float else [int(v) for v in t]
+        except ValueError:
+            pass
+        if assert_length is None or \
+            len(t) == assert_length or \
+            allow_single and len(t) == 1:
+            return(t)
+        raise ValueError('Configuration option [{}]:{} needs to have exactly {}{} elements.'.format(section, option, assert_length, ' or 1' if allow_single else ''))
