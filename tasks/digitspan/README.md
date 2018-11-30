@@ -38,7 +38,7 @@ duration_break = 200
 
 ### Appearance
 
-The experiment design is covered in the `[APPEARANCE]` section of the configuration file; there are no required arguments.
+The experiment appearance is covered in the `[APPEARANCE]` section of the configuration file; there are no required arguments.
 In the following, the default options are listed.
 
 ```ini
