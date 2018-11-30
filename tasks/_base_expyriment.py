@@ -476,3 +476,9 @@ class CustomConfigParser(RawConfigParser):
             allow_single and len(t) == 1:
             return(t)
         raise ValueError('Configuration option [{}]:{} needs to have exactly {}{} elements.'.format(section, option, assert_length, ' or 1' if allow_single else ''))
+
+    def getforblock(self, section, option, block_id):
+        value = self.gettuple(section, option,
+            assert_length=self.getint('DESIGN', 'blocks'),
+                allow_single=True)
+        return(value[0] if len(value) == 1 else value[block_id])

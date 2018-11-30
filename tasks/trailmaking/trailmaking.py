@@ -117,18 +117,12 @@ class TrailMaking():
         self.exp._show_message('', 'thanks')
         self.exp._end()
 
-    def get_config_for_block(self, section, option, block_id):
-        value = self.exp.config.gettuple(section, option,
-            assert_length=self.exp.config.getint('DESIGN', 'blocks'),
-            allow_single=True)
-        return(value[0] if len(value) == 1 else value[block_id])
-
     def prepare_block(self, id):
         block = design.Block()
-        block.set_factor('num_targets', self.get_config_for_block('DESIGN', 'num_targets', id))
-        block.set_factor('target_titles', self.get_config_for_block('DESIGN', 'target_titles', id))
-        block.set_factor('timeout', self.get_config_for_block('DESIGN', 'timeout', id))
-        for t in range(self.get_config_for_block('DESIGN', 'trials', id)):
+        block.set_factor('num_targets', self.exp.config.getforblock('DESIGN', 'num_targets', id))
+        block.set_factor('target_titles', self.exp.config.getforblock('DESIGN', 'target_titles', id))
+        block.set_factor('timeout', self.exp.config.getforblock('DESIGN', 'timeout', id))
+        for t in range(self.exp.config.getforblock('DESIGN', 'trials', id)):
             block.add_trial(self.prepare_trial(block))
         self.exp.add_block(block)
 
