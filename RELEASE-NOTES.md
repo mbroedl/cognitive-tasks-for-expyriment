@@ -1,6 +1,6 @@
 # Release Notes
 
-## 0.1.0 Initial Release (2018-11-30)
+## 0.1.1 Initial Release (2018-11-30)
 
 Four tasks added:
 
@@ -11,3 +11,5 @@ Four tasks added:
 
 Plus a boilerplate for more experiments.
 Currently, there are no tutorials or practice sessions implemented.
+
+Add a DOI via [zenodo](https://zenodo.org/).
