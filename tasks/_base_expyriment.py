@@ -429,7 +429,6 @@ sd = lambda ll: ( sum((x-mean(ll))**2 for x in ll) / (len(ll)-1) ) ** 0.5 if len
 var = lambda ll: sum((x - mean(ll)) ** 2 for x in ll) / len(ll)
 
 class LogFile(io.OutputFile):
-    # copied and changed from expyriment 0.7.0 source
     def __init__(self, filename, col_names, delimiter=None, comment_char=None, suffix='', directory=''):
         import atexit
 
@@ -450,21 +449,16 @@ class LogFile(io.OutputFile):
         self._directory = directory
 
         self._buffer = []
-        if not os.path.isdir(directory):
-            os.mkdir(directory)
-        self._filename = self.standard_file_name
-        self._fullpath = directory + "/{0}".format(self._filename)
+        os.mkdir(directory) if not os.path.isdir(directory) else None
+
+        self._fullpath = directory + "/" + str(self.standard_file_name)
 
         atexit.register(self.save)
 
         add_headers = True if not os.path.exists(self._fullpath) else False
         # Create new file
-        fl = open(self._fullpath, 'a+')
-        fl.close()
-        try:
-            locale_enc = locale.getdefaultlocale()[1]
-        except:
-            locale_enc = "UTF-8"
+        with open(self._fullpath, 'a+') as f:
+            pass
 
         if add_headers:
             self.add(col_names)
