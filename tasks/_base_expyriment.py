@@ -145,14 +145,19 @@ class BaseExpyriment(design.Experiment):
         if self.config.has_option('DEVELOPMENT', 'active') and self.config.getboolean('DEVELOPMENT', 'active'):
             self._dev_mode = True
 
-    def _show_message(self, caption, text, format={}):
+    def _show_message(self, caption, text, format={}, response='both'):
         if caption == 'SKIP' or text == 'SKIP':
             return()
         stimuli.TextScreen(_(caption).format(**format), _(text).format(**format)).present()
-        if android:
-            self.mouse.wait_press()
-        else:
-            self.keyboard.wait()
+        self.keyboard.clear()
+        self.mouse.clear()
+        while True:
+            self.clock.wait(10)
+            if (android or response == 'mouse' or response == 'both') and \
+                self.mouse.get_last_button_down_event() is not None or \
+                (response == 'keyboard' or response == 'both') and \
+                len(self.keyboard.read_out_buffered_keys()) > 0:
+                break
 
     def _in2px(self, size, scale=1):
         if type(size) == str:
