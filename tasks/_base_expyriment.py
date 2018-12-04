@@ -295,53 +295,47 @@ class BaseExpyriment(design.Experiment):
             buttons.append(btn)
         return(buttons)
 
-def _clickable_numeric_input(title, start_at):
-    # copied from the 0.7.0 release of expyriment
-    # https://github.com/expyriment/expyriment/blob/81acb8be1a2abcecdbbfe501e9c4f662c9ba6620/expyriment/control/_experiment_control.py#L96
-    background_stimulus = stimuli.BlankScreen(colour=(0, 0, 0))
-    fields = [stimuli.Circle(diameter=200, colour=(70, 70, 70),
-                             position=(0, 70)),
-              stimuli.Circle(diameter=200, colour=(70, 70, 70),
-                             position=(0, -70)),
-              stimuli.Rectangle(size=(50, 50), colour=(70, 70, 70),
-                                position=(120, 0))]
-    fields[0].scale((0.25, 0.25))
-    fields[1].scale((0.25, 0.25))
+def _clickable_numeric_input(title, start_at, scale=1.0):
+    positions = [(100*scale, 0),
+        (-100*scale, 0),
+        (300*scale, -200*scale)]
+    btn_colour = misc.constants.C_DARKGREY
+    btn_size = (int(70*scale),int(70*scale))
+    btn_text_colour = (0, 0, 0)
+    pos_title = (0, 100*scale)
+    title_text_colour = misc.constants.C_GREY
+    number_text_colour = misc.constants.C_GREY
 
-        # stimuli.TextLine(text="-", text_size=36, position=(0, -70),
-        #                  text_font="FreeMono",
-        #                  text_colour=(0, 0, 0)),
-    plusminus = [
-        stimuli.TextLine(title, text_size=24,
-                         text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
-                         position=(-182, 0)),
-        stimuli.FixCross(size=(15, 15), position=(0, 70),
-                         colour=(0, 0, 0), line_width=2),
-        stimuli.FixCross(size=(15, 2), position=(0, -70),
-                         colour=(0, 0, 0), line_width=2),
-        stimuli.TextLine(text = "Go", text_size=18, position=(120, 0),
-                         text_colour=(0, 0, 0))]
+    buttons = [stimuli.Rectangle(size=btn_size, colour=btn_colour, position=pos) for pos in positions]
+
+    labels = [
+        stimuli.TextLine(text = 'OK', text_size=int(30*scale),
+            position=positions[2], text_colour=btn_text_colour),
+        stimuli.FixCross(size=(40*scale, 40*scale),
+            position=positions[0], colour=btn_text_colour,
+            line_width=2*scale),
+        stimuli.FixCross(size=(40*scale, 2),
+            position=positions[1], colour=btn_text_colour,
+            line_width=3*scale),
+        stimuli.TextLine(title, text_size=int(30*scale),
+            text_colour=title_text_colour, position=pos_title)
+        ]
+
     number = int(start_at)
 
     while True:
-        text = stimuli.TextLine(
-            text="{0}".format(number),
-            text_size=28,
-            text_colour=misc.constants.C_EXPYRIMENT_ORANGE)
-        btn = io.TouchScreenButtonBox(
-            button_fields=fields,
-            stimuli=plusminus+[text],
-            background_stimulus=background_stimulus)
-        btn.show()
-        key, rt = btn.wait()
-        if key == fields[0]:
-            number += 1
-        elif key == fields[1]:
-            number -= 1
-            if number <= 0:
-                number = 0
-        elif key == fields[2]:
-            break
+        current_num = stimuli.TextLine(text=str(number),
+            text_size=int(40*scale),
+            text_colour=number_text_colour)
+        button_box = io.TouchScreenButtonBox(buttons, labels+[current_num])
+        button_box.show()
+        key = button_box.wait()[0]
+        if key == buttons[0]:
+            number = number + 1
+        elif key == buttons[1]:
+            number = max(number - 1, 1)
+        elif key == buttons[2]:
+            return(number)
     return(number)
 
 def _numeric_input(title, default=''):
