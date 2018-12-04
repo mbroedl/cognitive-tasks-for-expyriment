@@ -68,6 +68,7 @@ stimuli.Circle = _Circle
 # PATCHING A BUTTONBOX FAILURE in 0.9
 if expyriment_version == [0, 9, 0]:
     _TouchScreenButtonBox_init = io.TouchScreenButtonBox.__init__
+    _TouchScreenButtonBox_create = io.TouchScreenButtonBox.create
     class _TouchScreenButtonBox(io.TouchScreenButtonBox):
         def __init__(self, button_fields, stimuli=[], *args, **kwargs):
             _TouchScreenButtonBox_init(self, button_fields=button_fields, stimuli=stimuli, *args, **kwargs)
@@ -75,6 +76,15 @@ if expyriment_version == [0, 9, 0]:
                 self.add_button_field(field)
             for stimulus in stimuli:
                 self.add_stimulus(stimulus)
+
+        def create(self):
+            _TouchScreenButtonBox_create(self)
+            self._canvas.decompress()
+            for field in self._button_fields:
+                field.plot(self._canvas)
+            for stimulus in self._stimuli:
+                stimulus.plot(self._canvas)
+            self._canvas.preload()
     io.TouchScreenButtonBox = _TouchScreenButtonBox
 
 i18n = {}
@@ -308,15 +318,18 @@ def _clickable_numeric_input(title, start_at, scale=1.0):
 
     buttons = [stimuli.Rectangle(size=btn_size, colour=btn_colour, position=pos) for pos in positions]
 
+    plus_width = 2*scale if expyriment_version[0] == 7 else 3*scale
+    minus_width = 3*scale
+
     labels = [
         stimuli.TextLine(text = 'OK', text_size=int(30*scale),
             position=positions[2], text_colour=btn_text_colour),
         stimuli.FixCross(size=(40*scale, 40*scale),
             position=positions[0], colour=btn_text_colour,
-            line_width=2*scale),
-        stimuli.FixCross(size=(40*scale, 2),
+            line_width=plus_width),
+        stimuli.FixCross(size=(40*scale, 3*scale),
             position=positions[1], colour=btn_text_colour,
-            line_width=3*scale),
+            line_width=minus_width),
         stimuli.TextLine(title, text_size=int(30*scale),
             text_colour=title_text_colour, position=pos_title)
         ]
