@@ -39,15 +39,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
+import sys
+import os
+from ast import literal_eval
+from expyriment import design, control, stimuli, io, misc
+
 from expyriment import __version__ as _expyriment_version
 from sys import version as _python_version
 expyriment_version = [int(i) for i in _expyriment_version.split('.')]
 python_version = [int(i) for i in _python_version.split(' ')[0].split('.')]
 
-from expyriment import design, control, stimuli, io, misc
-from expyriment import __version__ as _expyriment_version
-import os, sys
-from ast import literal_eval
 
 if python_version >= [3]:
     from configparser import RawConfigParser, NoOptionError, NoSectionError
@@ -62,32 +63,34 @@ except ImportError:
 fallback_dpi = 96
 
 COLOURS = {
-    'black' : (0, 0, 0),
-    'blue' : (0, 0, 255),
-    'darkgrey' : (150, 150, 150),
-    'expyriment_orange' : (255, 150, 50),
-    'expyriment_purple' : (160, 70, 250),
-    'green' : (0, 255, 0),
-    'grey' : (200, 200, 200),
-    'red' : (255, 0, 0),
-    'white' : (255, 255, 255),
-    'yellow' : (255, 255, 0),
-    'cyan' : (0, 255, 255),
-    'magenta' : (255, 0, 255)
+    'black': (0, 0, 0),
+    'blue': (0, 0, 255),
+    'darkgrey': (150, 150, 150),
+    'expyriment_orange': (255, 150, 50),
+    'expyriment_purple': (160, 70, 250),
+    'green': (0, 255, 0),
+    'grey': (200, 200, 200),
+    'red': (255, 0, 0),
+    'white': (255, 255, 255),
+    'yellow': (255, 255, 0),
+    'cyan': (0, 255, 255),
+    'magenta': (255, 0, 255)
 }
 
 DEFAULTS = {
-    'button_height' : '20mm',
-    'button_background_colour' : (0, 0, 0),
-    'button_border_colour' : (80, 80, 80),
-    'button_text_colour' : 'white',
-    'button_highlight_colour' : (255, 200, 200),
-    'button_highlight_duration' : 50
+    'button_height': '20mm',
+    'button_background_colour': (0, 0, 0),
+    'button_border_colour': (80, 80, 80),
+    'button_text_colour': 'white',
+    'button_highlight_colour': (255, 200, 200),
+    'button_highlight_duration': 50
 }
 
 # PATCHING THE CIRCLE DIAMETER/RADIUS INCOMPATIBILITY
 
 _Circle_init = stimuli.Circle.__init__
+
+
 class _Circle(stimuli.Circle):
     def __init__(self, diameter=None, radius=None, anti_aliasing=None, *args, **kwargs):
         if radius and not diameter:
@@ -96,10 +99,11 @@ class _Circle(stimuli.Circle):
             radius = diameter / 2
         if anti_aliasing is True:
             anti_aliasing = 10
-        if expyriment_version >= [0,8]:
+        if expyriment_version >= [0, 8]:
             _Circle_init(self, radius, anti_aliasing=anti_aliasing, *args, **kwargs)
         else:
             _Circle_init(self, diameter, *args, **kwargs)
+
 
 stimuli.Circle = _Circle
 
@@ -107,9 +111,11 @@ stimuli.Circle = _Circle
 if expyriment_version == [0, 9, 0]:
     _TouchScreenButtonBox_init = io.TouchScreenButtonBox.__init__
     _TouchScreenButtonBox_create = io.TouchScreenButtonBox.create
+
     class _TouchScreenButtonBox(io.TouchScreenButtonBox):
         def __init__(self, button_fields, stimuli=[], *args, **kwargs):
-            _TouchScreenButtonBox_init(self, button_fields=button_fields, stimuli=stimuli, *args, **kwargs)
+            _TouchScreenButtonBox_init(self, button_fields=button_fields,
+                                       stimuli=stimuli, *args, **kwargs)
             for field in button_fields:
                 self.add_button_field(field)
             for stimulus in stimuli:
@@ -126,18 +132,22 @@ if expyriment_version == [0, 9, 0]:
     io.TouchScreenButtonBox = _TouchScreenButtonBox
 
 i18n = {}
-_ = lambda key: i18n[key] if key else ''
+
+
+def _(key): return i18n[key] if key else ''
+
 
 class BaseExpyriment(design.Experiment):
-    def __init__(self, default_config = {}):
+    def __init__(self, default_config={}):
         self._load_config(default_config)
         design.Experiment.__init__(self, _('title'))
         control.set_develop_mode(self._dev_mode)
 
         if self.config.has_option('GENERAL', 'window_size') and not self._dev_mode:
-            control.defaults.window_size = self.config.gettuple('GENERAL', 'window_size', assert_length=2)
+            control.defaults.window_size = self.config.gettuple(
+                'GENERAL', 'window_size', assert_length=2)
         if self.config.has_option('GENERAL', 'fullscreen') and not self._dev_mode:
-            control.defaults.window_mode =  self.config.getboolean('GENERAL', 'fullscreen')
+            control.defaults.window_mode = self.config.getboolean('GENERAL', 'fullscreen')
         control.initialize(self)
         if self._dev_mode:
             self.mouse.show_cursor()
@@ -164,12 +174,12 @@ class BaseExpyriment(design.Experiment):
         control.start(subject_id=int(self._subject))
 
         if self._session is not None:
-            self.data.add_subject_info('session: '+ self._session)
+            self.data.add_subject_info('session: ' + self._session)
 
     def _end(self):
         control.end()
 
-    def _load_config(self, defaults = {}):
+    def _load_config(self, defaults={}):
         d1 = DEFAULTS.copy()
         d1.update(defaults)
         d1 = {k: str(v) for k, v in d1.items()}
@@ -194,7 +204,7 @@ class BaseExpyriment(design.Experiment):
             if (android or response == 'mouse' or response == 'both') and \
                 self.mouse.get_last_button_down_event() is not None or \
                 (response == 'keyboard' or response == 'both') and \
-                len(self.keyboard.read_out_buffered_keys()) > 0:
+                    len(self.keyboard.read_out_buffered_keys()) > 0:
                 break
 
     def _in2px(self, size, scale=1):
@@ -247,7 +257,8 @@ class BaseExpyriment(design.Experiment):
         if colour in COLOURS:
             return(COLOURS[colour])
         if ',' in colour:
-            elements = colour.replace('(', '').replace(')', '').replace('[', '').replace(']', '').split(',')
+            elements = colour.replace('(', '').replace(')', '').replace(
+                '[', '').replace(']', '').split(',')
             colours = []
             while len(elements) > 0:
                 elements[0] = elements[0].strip()
@@ -258,7 +269,8 @@ class BaseExpyriment(design.Experiment):
                         colours.append([int(c) for c in elements[:3]])
                         elements = elements[3:]
                     except ValueError:
-                        raise ValueError('"{}" does not represent one or more colours.'.format(colour))
+                        raise ValueError(
+                            '"{}" does not represent one or more colours.'.format(colour))
             if len(colours) == 1:
                 return(colours[0])
             return(colours)
@@ -276,7 +288,8 @@ class BaseExpyriment(design.Experiment):
             return
 
         args = log_args_to_dict(self, *argv)
-        col_names = ['subject', 'session', 'block', 'trial'] + [col.strip() for col in self.config.get('LOG', 'cols_trial').split(',')]
+        col_names = ['subject', 'session', 'block', 'trial'] + \
+            [col.strip() for col in self.config.get('LOG', 'cols_trial').split(',')]
         columns = log_values_to_cols(col_names, args)
 
         if not self.trialdata:
@@ -301,12 +314,13 @@ class BaseExpyriment(design.Experiment):
 
         args.update(log_args_to_dict(self, *argv))
 
-        col_names = ['subject', 'session', 'block'] + [col.strip() for col in self.config.get('LOG', 'cols_block').split(',')]
+        col_names = ['subject', 'session', 'block'] + [col.strip()
+                                                       for col in self.config.get('LOG', 'cols_block').split(',')]
 
         if not self.block_log:
             self.block_log = LogFile(filename=self.config.get('LOG', 'block_summary_file'),
-                directory=io.defaults.datafile_directory,
-                col_names=col_names)
+                                     directory=io.defaults.datafile_directory,
+                                     col_names=col_names)
         self.block_log.add(log_values_to_cols(col_names, args))
         return(args)
 
@@ -315,22 +329,22 @@ class BaseExpyriment(design.Experiment):
             return
         args = self.trialdata.copy()
         args.update(log_args_to_dict(self, *argv))
-        col_names = ['subject', 'session'] + [col.strip() for col in self.config.get('LOG', 'cols_experiment').split(',')]
+        col_names = ['subject', 'session'] + [col.strip()
+                                              for col in self.config.get('LOG', 'cols_experiment').split(',')]
 
         if not self.experiment_log:
             self.experiment_log = LogFile(filename=self.config.get('LOG', 'experiment_summary_file'),
-                directory=io.defaults.datafile_directory,
-                col_names=col_names)
+                                          directory=io.defaults.datafile_directory,
+                                          col_names=col_names)
         self.experiment_log.add(log_values_to_cols(col_names, args))
-
 
     def _log_dev(self, args):
         if self._dev_mode and self.config.has_option('DEVELOPMENT', 'log_all_variables'):
             keys = sorted(args.keys())
             if not self.dev_log:
                 self.dev_log = LogFile(filename=self.config.get('DEVELOPMENT', 'log_all_variables'),
-                    directory=io.defaults.datafile_directory,
-                    col_names=keys)
+                                       directory=io.defaults.datafile_directory,
+                                       col_names=keys)
             self.dev_log.add(log_values_to_cols(keys, args))
 
     def prepare_button_boxes(self, labels):
@@ -339,50 +353,55 @@ class BaseExpyriment(design.Experiment):
             width, height = self.screen.window_size
             size = (width / len(labels), self._unit(self.config.get('APPEARANCE', 'button_height')))
             pos = (int(size[0] * (i - len(labels) / 2.0 + 0.5)), -(height - size[1]) / 2)
-            btn = stimuli.Rectangle(size=size, position=pos, colour=self._colours(self.config.get('APPEARANCE', 'button_background_colour')))
-            stimuli.Rectangle(size=size, line_width=5, colour=self._colours(self.config.get('APPEARANCE', 'button_border_colour'))).plot(btn)
-            text = stimuli.TextLine(text=lb, text_colour=self._colours(self.config.get('APPEARANCE', 'button_text_colour')))
+            btn = stimuli.Rectangle(size=size, position=pos, colour=self._colours(
+                self.config.get('APPEARANCE', 'button_background_colour')))
+            stimuli.Rectangle(size=size, line_width=5, colour=self._colours(
+                self.config.get('APPEARANCE', 'button_border_colour'))).plot(btn)
+            text = stimuli.TextLine(text=lb, text_colour=self._colours(
+                self.config.get('APPEARANCE', 'button_text_colour')))
             text.plot(btn)
             btn.label = lb
             btn.preload()
             buttons.append(btn)
         return(buttons)
 
+
 def _clickable_numeric_input(title, start_at, scale=1.0):
     positions = [(100*scale, 0),
-        (-100*scale, 0),
-        (300*scale, -200*scale)]
+                 (-100*scale, 0),
+                 (300*scale, -200*scale)]
     btn_colour = misc.constants.C_DARKGREY
-    btn_size = (int(70*scale),int(70*scale))
+    btn_size = (int(70*scale), int(70*scale))
     btn_text_colour = (0, 0, 0)
     pos_title = (0, 100*scale)
     title_text_colour = misc.constants.C_GREY
     number_text_colour = misc.constants.C_GREY
 
-    buttons = [stimuli.Rectangle(size=btn_size, colour=btn_colour, position=pos) for pos in positions]
+    buttons = [stimuli.Rectangle(size=btn_size, colour=btn_colour, position=pos)
+               for pos in positions]
 
     plus_width = 2*scale if expyriment_version[0] == 7 else 3*scale
     minus_width = 3*scale
 
     labels = [
-        stimuli.TextLine(text = 'OK', text_size=int(30*scale),
-            position=positions[2], text_colour=btn_text_colour),
+        stimuli.TextLine(text='OK', text_size=int(30*scale),
+                         position=positions[2], text_colour=btn_text_colour),
         stimuli.FixCross(size=(40*scale, 40*scale),
-            position=positions[0], colour=btn_text_colour,
-            line_width=plus_width),
+                         position=positions[0], colour=btn_text_colour,
+                         line_width=plus_width),
         stimuli.FixCross(size=(40*scale, 3*scale),
-            position=positions[1], colour=btn_text_colour,
-            line_width=minus_width),
+                         position=positions[1], colour=btn_text_colour,
+                         line_width=minus_width),
         stimuli.TextLine(title, text_size=int(30*scale),
-            text_colour=title_text_colour, position=pos_title)
-        ]
+                         text_colour=title_text_colour, position=pos_title)
+    ]
 
     number = int(start_at)
 
     while True:
         current_num = stimuli.TextLine(text=str(number),
-            text_size=int(40*scale),
-            text_colour=number_text_colour)
+                                       text_size=int(40*scale),
+                                       text_colour=number_text_colour)
         button_box = io.TouchScreenButtonBox(buttons, labels+[current_num])
         button_box.show()
         key = button_box.wait()[0]
@@ -394,11 +413,13 @@ def _clickable_numeric_input(title, start_at, scale=1.0):
             return(number)
     return(number)
 
+
 def _numeric_input(title, default=''):
     if android:
         return(str(_clickable_numeric_input(title, default)))
     else:
         return(io.TextInput(message=title, length=3).get(str(default)))
+
 
 def _prompt_participant_information():
     next = 1
@@ -406,14 +427,16 @@ def _prompt_participant_information():
     if os.path.isdir(io.defaults.datafile_directory):
         existing_files = os.listdir(io.defaults.datafile_directory)
         existing_files = [x.split('.')[-2] for x in existing_files if '.xpd' in x]
-        done_subjects = [int(x) for x in [y.split('-')[0] for y in existing_files if '-' in y] if x.isdigit()]
+        done_subjects = [int(x) for x in [y.split('-')[0]
+                                          for y in existing_files if '-' in y] if x.isdigit()]
         next = max(done_subjects) + 1 if done_subjects else 1
 
     subject = _numeric_input('SUBJECT ID', next)
 
     next = 1
     if existing_files:
-        done_sessions = [int(z) for z in [y.split('-')[1] for y in existing_files if '-' in y and int(y.split('-')[0]) == int(subject)] if z.isdigit()]
+        done_sessions = [int(z) for z in [y.split(
+            '-')[1] for y in existing_files if '-' in y and int(y.split('-')[0]) == int(subject)] if z.isdigit()]
         next = max(done_sessions) + 1 if done_sessions else 1
 
     session = _numeric_input('SESSION ID', next)
@@ -422,7 +445,7 @@ def _prompt_participant_information():
 
 
 def log_args_to_dict(exp, *argv):
-    stash = {'subject': exp._subject, 'session' : exp._session}
+    stash = {'subject': exp._subject, 'session': exp._session}
     for arg in argv:
         if type(arg) == dict:
             stash.update(arg)
@@ -433,6 +456,7 @@ def log_args_to_dict(exp, *argv):
             stash.update(arg.factor_dict)
             stash.update({'trial': arg.id})
     return(stash)
+
 
 def log_values_to_cols(column_names, data):
     cols = []
@@ -445,15 +469,17 @@ def log_values_to_cols(column_names, data):
             col, filter = col[:-1].split('[')
         value = data.get(col, 'NA')
 
-        if filter and type(value) == list: # FIXME abbreviate?
+        if filter and type(value) == list:  # FIXME abbreviate?
             if '==' in filter:
                 filter_field, filter_value = filter.split('==')
                 filter_value = literal_eval(filter_value)
-                value = [value[i] for i in range(len(value)) if str(data[filter_field][i]) == str(filter_value)]
+                value = [value[i] for i in range(len(value)) if str(
+                    data[filter_field][i]) == str(filter_value)]
             elif '!=' in filter:
                 filter_field, filter_value = filter.split('!=')
                 filter_value = literal_eval(filter_value)
-                value = [value[i] for i in range(len(value)) if str(data[filter_field][i]) != str(filter_value)]
+                value = [value[i] for i in range(len(value)) if str(
+                    data[filter_field][i]) != str(filter_value)]
             else:
                 value = [value[i] for i in range(len(value)) if data[filter][i]]
 
@@ -480,9 +506,15 @@ def log_values_to_cols(column_names, data):
         cols.append(value)
     return(cols)
 
-mean = lambda ll: sum(ll) * 1.0 / len(ll) if len(ll) >= 1 else None
-sd = lambda ll: ( sum((x-mean(ll))**2 for x in ll) / (len(ll)-1) ) ** 0.5 if len(ll) >= 2 else None
-var = lambda ll: sum((x - mean(ll)) ** 2 for x in ll) / len(ll)
+
+def mean(ll): return sum(ll) * 1.0 / len(ll) if len(ll) >= 1 else None
+
+
+def sd(ll): return (sum((x-mean(ll))**2 for x in ll) / (len(ll)-1)) ** 0.5 if len(ll) >= 2 else None
+
+
+def var(ll): return sum((x - mean(ll)) ** 2 for x in ll) / len(ll)
+
 
 class LogFile(io.OutputFile):
     def __init__(self, filename, col_names, delimiter=None, comment_char=None, suffix='', directory=''):
@@ -529,15 +561,18 @@ class LogFile(io.OutputFile):
         return rtn + '_' + self._filename_ + self.suffix
 
     def add(self, data):
-        coerce_list_to_string = lambda l: '|'.join([str(i) for i in l]) if type(l) is list or type(l) is tuple else l
+        def coerce_list_to_string(l): return '|'.join(
+            [str(i) for i in l]) if type(l) is list or type(l) is tuple else l
         if type(data) is list or type(data) is tuple:
             if expyriment_version < [0, 9]:
-                elements = [io.DataFile._typecheck_and_cast2str(coerce_list_to_string(el)) for el in data]
+                elements = [io.DataFile._typecheck_and_cast2str(
+                    coerce_list_to_string(el)) for el in data]
             else:
                 elements = [str(coerce_list_to_string(el)) for el in data]
             self.write_line(self.delimiter.join(elements))
         else:
             self.write_line(io.DataFile._typecheck_and_cast2str(data))
+
 
 class CustomConfigParser(RawConfigParser):
     def get(self, section, option, default=None, **kwargs):
@@ -560,13 +595,15 @@ class CustomConfigParser(RawConfigParser):
         try:
             return self._get(section, int, option, default)
         except ValueError:
-            raise ValueError('Configuration option [{}]:{} needs to be a whole number.'.format(section, option))
+            raise ValueError(
+                'Configuration option [{}]:{} needs to be a whole number.'.format(section, option))
 
     def getfloat(self, section, option, default=None):
         try:
             return self._get(section, float, option, default)
         except ValueError:
-            raise ValueError('Configuration option [{}]:{} needs to be a number.'.format(section, option))
+            raise ValueError(
+                'Configuration option [{}]:{} needs to be a number.'.format(section, option))
 
     def getboolean(self, section, option, default=None):
         try:
@@ -589,13 +626,14 @@ class CustomConfigParser(RawConfigParser):
         except ValueError:
             pass
         if assert_length is None or \
-            len(t) == assert_length or \
-            allow_single and len(t) == 1:
+                len(t) == assert_length or \
+                allow_single and len(t) == 1:
             return(t)
-        raise ValueError('Configuration option [{}]:{} needs to have exactly {}{} elements.'.format(section, option, assert_length, ' or 1' if allow_single else ''))
+        raise ValueError('Configuration option [{}]:{} needs to have exactly {}{} elements.'.format(
+            section, option, assert_length, ' or 1' if allow_single else ''))
 
     def getforblock(self, section, option, block_id):
         value = self.gettuple(section, option,
-            assert_length=self.getint('DESIGN', 'blocks'),
-                allow_single=True)
+                              assert_length=self.getint('DESIGN', 'blocks'),
+                              allow_single=True)
         return(value[0] if len(value) == 1 else value[block_id])

@@ -48,24 +48,25 @@ except ImportError:
     android = None
 
 DEFAULTS = {
-    'on_pointer_release' : 'reset',
-    'on_mismatched_circle' : 'repeat_last',
-    'target_radius' : '5mm',
-    'line_width' : '1.5mm',
-    'stimulus_relative_text_size' : 1.5,
-    'stimulus_text_correction_y' : 0.2,
-    'target_font' : 'sans',
-    'min_distance_of_targets' : 4,
-    'attempts_before_reducing_min_distance' : 200,
-    'colour_line' : (0, 255, 0),
-    'colour_target' : (255, 255, 0),
-    'colour_target_label' : (0, 0, 0),
-    'colour_target_done' : (0, 255, 0),
-    'colour_target_error' : (255, 0, 0),
-    'colour_target_hint' : (0, 255, 0),
-    'colour_window_boundary' : None,
-    'antialiasing' : 'yes'
+    'on_pointer_release': 'reset',
+    'on_mismatched_circle': 'repeat_last',
+    'target_radius': '5mm',
+    'line_width': '1.5mm',
+    'stimulus_relative_text_size': 1.5,
+    'stimulus_text_correction_y': 0.2,
+    'target_font': 'sans',
+    'min_distance_of_targets': 4,
+    'attempts_before_reducing_min_distance': 200,
+    'colour_line': (0, 255, 0),
+    'colour_target': (255, 255, 0),
+    'colour_target_label': (0, 0, 0),
+    'colour_target_done': (0, 255, 0),
+    'colour_target_error': (255, 0, 0),
+    'colour_target_hint': (0, 255, 0),
+    'colour_window_boundary': None,
+    'antialiasing': 'yes'
 }
+
 
 class TrailMaking():
     @staticmethod
@@ -106,9 +107,11 @@ class TrailMaking():
 
         self.colour_target_label = self.exp.config.gettuple('APPEARANCE', 'colour_target_label')
         self.target_font = self.exp.config.get('APPEARANCE', 'target_font')
-        self.stimulus_text_correction_y = self.exp.config.getfloat('APPEARANCE', 'stimulus_text_correction_y')
+        self.stimulus_text_correction_y = self.exp.config.getfloat(
+            'APPEARANCE', 'stimulus_text_correction_y')
 
-        self.stimulus_relative_text_size = self.exp.config.getfloat('APPEARANCE', 'stimulus_relative_text_size')
+        self.stimulus_relative_text_size = self.exp.config.getfloat(
+            'APPEARANCE', 'stimulus_relative_text_size')
 
         self.on_pointer_release = self.exp.config.get('DESIGN', 'on_pointer_release')
         self.on_mismatched_circle = self.exp.config.get('DESIGN', 'on_mismatched_circle')
@@ -126,7 +129,8 @@ class TrailMaking():
     def prepare_block(self, id):
         block = design.Block()
         block.set_factor('num_targets', self.exp.config.getforblock('DESIGN', 'num_targets', id))
-        block.set_factor('target_titles', self.exp.config.getforblock('DESIGN', 'target_titles', id))
+        block.set_factor('target_titles', self.exp.config.getforblock(
+            'DESIGN', 'target_titles', id))
         block.set_factor('timeout', self.exp.config.getforblock('DESIGN', 'timeout', id))
         for t in range(self.exp.config.getforblock('DESIGN', 'trials', id)):
             block.add_trial(self.prepare_trial(block))
@@ -146,39 +150,42 @@ class TrailMaking():
 
         for lab, pos in zip(labels, positions):
             stim = stimuli.Circle(radius=self.radius, position=pos,
-                colour=self.colour_target,
-                anti_aliasing=self.antialiasing)
+                                  colour=self.colour_target,
+                                  anti_aliasing=self.antialiasing)
             label = stimuli.TextBox(lab,
-                (self.radius*2, self.radius*2),
-                text_size=int(self.stimulus_relative_text_size * self.radius),
-                position=[pos[0], pos[1] - self.stimulus_text_correction_y * self.radius],
-                text_justification=1,
-                text_colour=self.colour_target_label,
-                text_font=self.target_font)
+                                    (self.radius*2, self.radius*2),
+                                    text_size=int(self.stimulus_relative_text_size * self.radius),
+                                    position=[pos[0], pos[1] -
+                                              self.stimulus_text_correction_y * self.radius],
+                                    text_justification=1,
+                                    text_colour=self.colour_target_label,
+                                    text_font=self.target_font)
             trial.add_stimulus(stim)
             trial.add_stimulus(label)
         return(trial)
 
     def run_block(self, block):
-        #self.exp._show_message('', 'click_to_start')
+        # self.exp._show_message('', 'click_to_start')
         for trial in block.trials:
             has_moved_before = self.run_trial(block, trial)
-        #self.exp._log_block(block)
+        # self.exp._log_block(block)
 
     def run_trial(self, block, trial):
         trial = block.trials[0]
-        display_labels = lambda lbls: ' - '.join(lbls[:6]) + (' - ...' if len(lbls) > 6 else '')
+
+        def display_labels(lbls): return ' - '.join(lbls[:6]) + (' - ...' if len(lbls) > 6 else '')
         target_order = display_labels(self.labels[block.get_factor('target_titles')])
         self.exp._show_message('', 'instruction', format={'target_order': target_order})
 
         idoffset = trial.stimuli[1].id - 1
+
         def make_surface(trial):
             sf = stimuli.BlankScreen()
             boundary = self.exp.config.gettuple('APPEARANCE', 'colour_window_boundary')
             if boundary:
                 stimuli.Rectangle(self.exp.screen.window_size,
-                    line_width = self.line_width,
-                    colour = boundary).plot(sf)
+                                  line_width=self.line_width,
+                                  colour=boundary).plot(sf)
             [s.plot(sf) for s in trial.stimuli]
             return sf
 
@@ -192,14 +199,15 @@ class TrailMaking():
         mouse = self.exp.mouse.position
         has_moved = False
 
-        logs = {'lost_touch' : [], 'touched_targets' : []}
-        get_log = lambda evt: {
-            '_block'    : block.id + 1,
-            'current_target' : currentcircle,
-            'distance'  : cumulated,
-            'time'      : self.exp.clock.stopwatch_time,
-            'score'     : score,
-            'event'     : evt
+        logs = {'lost_touch': [], 'touched_targets': []}
+
+        def get_log(evt): return {
+            '_block': block.id + 1,
+            'current_target': currentcircle,
+            'distance': cumulated,
+            'time': self.exp.clock.stopwatch_time,
+            'score': score,
+            'event': evt
         }
 
         in_circle = -1
@@ -218,7 +226,7 @@ class TrailMaking():
                 if self.on_pointer_release == 'reset':
                     currentcircle = 0
                     mismatched_circles = []
-                    score = 0 # TODO
+                    score = 0  # TODO
                     has_moved = False
                     surface = make_surface(trial)
                     surface.present()
@@ -236,25 +244,27 @@ class TrailMaking():
                 continue
             if abs(new_mouse[0]) >= self.exp.screen.window_size[0]/2 or abs(new_mouse[1]) >= self.exp.screen.window_size[1]/2:
                 continue
-            if mouse != None:
+            if mouse is not None:
                 stimuli.Line(mouse, new_mouse, self.line_width, self.colour_line).plot(surface)
                 stimuli.Circle(radius=self.line_width/2,
-                    position=new_mouse,
-                    colour=self.colour_line,
-                    anti_aliasing=self.antialiasing
-                ).plot(surface)
+                               position=new_mouse,
+                               colour=self.colour_line,
+                               anti_aliasing=self.antialiasing
+                               ).plot(surface)
                 cumulated += TrailMaking.point_distance(new_mouse, mouse)
                 path.append([new_mouse[0], new_mouse[1], self.exp.clock.stopwatch_time])
-            get_stimulus_position = lambda sid: [x for x in trial.stimuli if x.id == sid][0].position
+
+            def get_stimulus_position(sid): return [
+                x for x in trial.stimuli if x.id == sid][0].position
 
             for s in trial.stimuli:
                 if 'Circle' in s.__class__.__name__:
-                    x,y = s.position
-                    if TrailMaking.point_distance((x,y), new_mouse) <= self.radius:
+                    x, y = s.position
+                    if TrailMaking.point_distance((x, y), new_mouse) <= self.radius:
                         if in_circle == -1:
                             in_circle = s.id
                             if (s.id - idoffset)/2+0 == currentcircle:
-                                #stimuli.Circle(radius=CIRCLE_SIZE, colour=COLOUR_CIRCLE_DONE, line_width=LINEWIDTH, position=(x, y)).plot(surface)
+                                # stimuli.Circle(radius=CIRCLE_SIZE, colour=COLOUR_CIRCLE_DONE, line_width=LINEWIDTH, position=(x, y)).plot(surface)
                                 # , anti_aliasing=ANTIALIASING
                                 currentcircle += 1
                                 # score += SCORE_CORRECT_CIRCLE
@@ -269,19 +279,21 @@ class TrailMaking():
                                 if self.on_mismatched_circle == 'repeat_last':
                                     if len(mismatched_circles) == 0 and currentcircle > 0:
                                         currentcircle -= 1
-                                    stimuli.Circle(radius=self.ring_radius, colour=self.colour_target_hint, line_width=self.line_width, position=get_stimulus_position(currentcircle*2 + idoffset)).plot(surface)
+                                    stimuli.Circle(radius=self.ring_radius, colour=self.colour_target_hint, line_width=self.line_width, position=get_stimulus_position(
+                                        currentcircle*2 + idoffset)).plot(surface)
                                 if self.on_mismatched_circle in ['highlight_only', 'repeat_last']:
                                     mismatched_circles.append(s.id)
                                     stimuli.Circle(radius=self.ring_radius,
-                                        colour=self.colour_target_error,
-                                        line_width=self.line_width,
-                                        position=(x, y),
-                                        anti_aliasing=self.antialiasing).plot(surface)
+                                                   colour=self.colour_target_error,
+                                                   line_width=self.line_width,
+                                                   position=(x, y),
+                                                   anti_aliasing=self.antialiasing).plot(surface)
                                 # score += SCORE_WRONG_CIRCLE
-                                logs['touched_targets'].append(get_log('wrong_touch:' + str(currentcircle)))
+                                logs['touched_targets'].append(
+                                    get_log('wrong_touch:' + str(currentcircle)))
                                 self.exp._log_trial(block, trial, logs['touched_targets'][-1])
                     else:
-                        if in_circle == s.id and TrailMaking.point_distance((x,y), new_mouse) >= self.radius + 1:
+                        if in_circle == s.id and TrailMaking.point_distance((x, y), new_mouse) >= self.radius + 1:
                             trial.stimuli[in_circle - idoffset + 1].plot(surface)
                             in_circle = -1
             surface.present()
@@ -292,9 +304,11 @@ class TrailMaking():
         logs['time'] = self.exp.clock.stopwatch_time
         logs['distance'] = cumulated
         logs['score'] = score
-        self.exp._show_message('', 'trial_done', format={'distance': logs['distance'], 'time': logs['time'], 'score': logs['score']})
+        self.exp._show_message('', 'trial_done', format={
+                               'distance': logs['distance'], 'time': logs['time'], 'score': logs['score']})
 
-        self.exp._log_block(trial, block, logs, {'trail' : trial.id}, TrailMaking.make_trail_summary(logs, block))
+        self.exp._log_block(trial, block, logs, {'trail': trial.id},
+                            TrailMaking.make_trail_summary(logs, block))
         # TODO
         # self.log_trail(block, path)
         # self.log_targets(block, block.trials[0].stimuli)
@@ -303,19 +317,22 @@ class TrailMaking():
     @staticmethod
     def make_labels():
         labels = {
-            '123': list(map(str, range(1,99))),
-            'abc': list(map(chr, range(97,123))),
-            'ABC': list(map(chr, range(65,91)))
+            '123': list(map(str, range(1, 99))),
+            'abc': list(map(chr, range(97, 123))),
+            'ABC': list(map(chr, range(65, 91)))
         }
 
         zip_longest = itertools.izip_longest if python_version[0] == 2 else itertools.zip_longest
-        alternate_lists = lambda a, b: [x for x in itertools.chain.from_iterable(zip_longest(a,b)) if x]
+
+        def alternate_lists(a, b): return [
+            x for x in itertools.chain.from_iterable(zip_longest(a, b)) if x]
+
         def alternate_lists_skip(a, b):
             a, b = list(a), list(b)
-            ln = min(len(a), len(b))
-            l = a[:ln]
-            l[1::2] = b[1:ln:2]
-            return(l)
+            length = min(len(a), len(b))
+            lst = a[:length]
+            lst[1::2] = b[1:length:2]
+            return(lst)
 
         labels['1a2'] = alternate_lists(labels['123'], labels['abc'])
         labels['a1b'] = alternate_lists(labels['abc'], labels['123'])
@@ -332,7 +349,8 @@ class TrailMaking():
         for i in range(num_positions):
             failed_position = 0
             while True:
-                p = randint(int(-area[0]/2 + radius), int(area[0]/2 - radius)), randint(int(-area[1]/2 + radius), int(area[1]/2 - radius))
+                p = randint(int(-area[0]/2 + radius), int(area[0]/2 - radius)
+                            ), randint(int(-area[1]/2 + radius), int(area[1]/2 - radius))
                 if not [1 for x in positions if TrailMaking.point_distance(p, x) < min_distance]:
                     positions.append(p)
                     break
@@ -351,20 +369,23 @@ class TrailMaking():
         # calculate minimum distance for connecting the paths
         mindist = 0
         for tid in range(2, len(block.trials[0].stimuli), 2):
-            mindist += TrailMaking.point_distance(block.trials[0].stimuli[tid].position, block.trials[0].stimuli[tid-2].position)
+            mindist += TrailMaking.point_distance(
+                block.trials[0].stimuli[tid].position, block.trials[0].stimuli[tid-2].position)
 
         return(
             {
-            'num_lost_touch'    : len(results['lost_touch']),
-            'num_wrong_targets' : len([1 for x in results['touched_targets'] if x['event'].startswith('wrong')]),
-            'num_done_targets'  : max([x['current_target'] for x in results['touched_targets'] if x['event'].startswith('correct')]),
-            'min_distance' : mindist,
-            'ratio_min_distance' : results['distance'] / mindist
+                'num_lost_touch': len(results['lost_touch']),
+                'num_wrong_targets': len([1 for x in results['touched_targets'] if x['event'].startswith('wrong')]),
+                'num_done_targets': max([x['current_target'] for x in results['touched_targets'] if x['event'].startswith('correct')]),
+                'min_distance': mindist,
+                'ratio_min_distance': results['distance'] / mindist
             }
         )
 
+
 def main():
     TrailMaking.run()
+
 
 if __name__ == '__main__':
     main()
@@ -374,29 +395,32 @@ def logTrail(exp, block, path):
     if not SUMMARY_LOG_PRACTICE and block.get_factor('Practice'):
         return
     if TRAIL_LOG_FILE_NAME:
-        p = self.exp.subject
+        p = exp.subject
         b = block.id + 1
-        fname = self.exp.data.directory + '/' + TRAIL_LOG_FILE_NAME.format(subject_id = p, session_id = self.exp.session, block_id = b)
+        fname = exp.data.directory + '/' + \
+            TRAIL_LOG_FILE_NAME.format(subject_id=p, session_id=exp.session, block_id=b)
         if not os.path.isfile(fname):
             with open(fname, "w") as f:
                 f.write(','.join(['participant', 'block', 'x', 'y', 'time']) + '\n')
         with open(fname, 'a') as f:
-             [f.write(','.join([str(x) for x in [p, b] + pth]) + '\n') for pth in path]
+            [f.write(','.join([str(x) for x in [p, b] + pth]) + '\n') for pth in path]
+
 
 def logTargets(exp, block, stimuli):
     if not SUMMARY_LOG_PRACTICE and block.get_factor('Practice'):
         return
     if TARGETS_LOG_FILE_NAME:
-        p = self.exp.subject
+        p = exp.subject
         b = block.id + 1
-        fname = self.exp.data.directory + '/' + TARGETS_LOG_FILE_NAME.format(subject_id = p, session_id = self.exp.session, block_id = b)
+        fname = exp.data.directory + '/' + \
+            TARGETS_LOG_FILE_NAME.format(subject_id=p, session_id=exp.session, block_id=b)
         if not os.path.isfile(fname):
             with open(fname, "w") as f:
                 f.write(','.join(['participant', 'block', 'label', 'x', 'y']) + '\n')
         with open(fname, 'a') as f:
             for s in stimuli:
                 if s.__class__.__name__ == 'Circle':
-                    x,y = s.position
+                    x, y = s.position
                 if s.__class__.__name__ == 'TextBox':
                     lab = s.text
                     f.write(','.join([str(x) for x in [p, b, lab, x, y]]) + '\n')

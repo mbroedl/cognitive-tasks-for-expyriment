@@ -47,8 +47,9 @@ except ImportError:
     android = None
 
 DEFAULTS = {
-    'value_name' : (123, 'abc')
+    'value_name': (123, 'abc')
 }
+
 
 class Boilerplate():
     @staticmethod
@@ -107,8 +108,10 @@ class Boilerplate():
         self.exp._log_trial(block, trial)
         return()
 
+
 def main():
     Boilerplate.run()
+
 
 if __name__ == '__main__':
     main()

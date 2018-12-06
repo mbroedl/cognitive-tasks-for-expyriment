@@ -51,33 +51,34 @@ except ImportError:
     android = None
 
 DEFAULTS = {
-    'offset'  : (0, 0),
-    'foreground_colour' : (255, 255, 255),
-    'stimulus_colour' : (255, 255, 255),
-    'background_colour' : (0, 0, 0),
-    'stimulus_text_size_scale' : 6,
-    'input_text_size_scale' : 3,
-    'starting_length' : 4,
-    'sequence_type' : 'numeric',
-    'reverse' : 'no',
-    'duration_display' : 800,
-    'duration_break' : 200
+    'offset': (0, 0),
+    'foreground_colour': (255, 255, 255),
+    'stimulus_colour': (255, 255, 255),
+    'background_colour': (0, 0, 0),
+    'stimulus_text_size_scale': 6,
+    'input_text_size_scale': 3,
+    'starting_length': 4,
+    'sequence_type': 'numeric',
+    'reverse': 'no',
+    'duration_display': 800,
+    'duration_break': 200
 }
+
 
 class DigitSpan():
     @staticmethod
     def run():
         exp = BaseExpyriment(DEFAULTS)
-        exp.DigitSpan = DigitSpan(exp)
+        digitspan = DigitSpan(exp)
 
-        exp.DigitSpan.start()
+        digitspan.start()
 
         for i in range(exp.config.getint('DESIGN', 'blocks')):
-            exp.DigitSpan.run_block(block_id=i+1)
+            digitspan.run_block(block_id=i+1)
 
         exp._log_experiment()
 
-        exp.DigitSpan.end()
+        digitspan.end()
         return(exp)
 
     def __init__(self, exp):
@@ -87,12 +88,17 @@ class DigitSpan():
         if self.exp.config.has_section('APPEARANCE'):
             pass
         self.offset = self.exp.config.gettuple('APPEARANCE', 'offset', assert_length=2)
-        self.stimulus_text_size = design.defaults.experiment_text_size * self.exp.config.getint('APPEARANCE', 'stimulus_text_size_scale')
-        self.input_text_size = design.defaults.experiment_text_size * self.exp.config.getint('APPEARANCE', 'input_text_size_scale')
-        self.stimulus_colour = self.exp.config.gettuple('APPEARANCE', 'stimulus_colour', assert_length=3)
-        ## TODO
-        self.foreground_colour = self.exp.config.gettuple('APPEARANCE', 'foreground_colour', assert_length=3)
-        self.background_colour = self.exp.config.gettuple('APPEARANCE', 'stimulus_colour', assert_length=3)
+        self.stimulus_text_size = design.defaults.experiment_text_size * \
+            self.exp.config.getint('APPEARANCE', 'stimulus_text_size_scale')
+        self.input_text_size = design.defaults.experiment_text_size * \
+            self.exp.config.getint('APPEARANCE', 'input_text_size_scale')
+        self.stimulus_colour = self.exp.config.gettuple(
+            'APPEARANCE', 'stimulus_colour', assert_length=3)
+        # TODO
+        self.foreground_colour = self.exp.config.gettuple(
+            'APPEARANCE', 'foreground_colour', assert_length=3)
+        self.background_colour = self.exp.config.gettuple(
+            'APPEARANCE', 'stimulus_colour', assert_length=3)
 
     def start(self):
         self.exp._start()
@@ -123,17 +129,19 @@ class DigitSpan():
         correct, user_input = self.user_answer(block, trial)
 
         self.exp._log_trial(block, trial,
-                {'correct': correct, 'user_input': user_input},
-                DigitSpan.evaluate_trial(user_input[::-1] if block.get_factor('reverse') else user_input, trial.get_factor('sequence')))
+                            {'correct': correct, 'user_input': user_input},
+                            DigitSpan.evaluate_trial(user_input[::-1] if block.get_factor('reverse') else user_input, trial.get_factor('sequence')))
         return(correct)
-
 
     def prepare_trial(self, key):
         trial = design.Trial()
         for key_pos in key:
-            trial.add_stimulus(stimuli.TextLine(key_pos, position=self.offset,
-                text_colour=self.stimulus_colour,
-                text_size=self.stimulus_text_size))
+            trial.add_stimulus(
+                stimuli.TextLine(
+                    key_pos,
+                    position=self.offset,
+                    text_colour=self.stimulus_colour,
+                    text_size=self.stimulus_text_size))
         trial.set_factor('sequence', key)
         trial.set_factor('sequence_length', len(key))
         return(trial)
@@ -154,11 +162,12 @@ class DigitSpan():
         seq_length = trial.get_factor('sequence_length')
         android.show_keyboard() if android else None
         self.exp.keyboard.clear()
-        user_input = io.TextInput(_('remember_sequence'), length=seq_length, user_text_size=self.input_text_size).get().strip()
+        user_input = io.TextInput(_('remember_sequence'), length=seq_length,
+                                  user_text_size=self.input_text_size).get().strip()
         android.hide_keyboard() if android else None
         answer = user_input[::-1] if block.get_factor('reverse') else user_input
         format = {'sequence': correct_answer,
-                'sequence_length': seq_length}
+                  'sequence_length': seq_length}
         if answer.strip() == correct_answer:
             self.exp._show_message('', 'correct_trial', format=format)
         else:
@@ -193,7 +202,8 @@ class DigitSpan():
                 elif type == 'alphabetic' or type == 'alphabetical':
                     key += chr(randint(97, 122))
                 else:
-                    raise ValueError('Digit Span type needs to be `numeric` or `alphabetic` or `ALPHABETIC`')
+                    raise ValueError(
+                        'Digit Span type needs to be `numeric` or `alphabetic` or `ALPHABETIC`')
             if DigitSpan.check_key_validity(key):
                 return(key)
 
@@ -205,15 +215,17 @@ class DigitSpan():
                 or sum([1 for i in range(3, len(key)) if key[i] == key[i-3]]) > len(key) / 9:
             return(False)
         if len(key) >= 2:
-            diffs = [ord(key[i]) - ord(key[i-1]) for i in range(1,len(key))]
+            diffs = [ord(key[i]) - ord(key[i-1]) for i in range(1, len(key))]
             if Counter(diffs)[0] > max(1, len(key) / 6) \
                     or sorted(Counter(diffs).values())[-1] > max(1, len(key) / 3) \
                     or sum([1 for i in range(1, len(diffs)) if diffs[i] == diffs[i-1]]) > max(1, len(key) / 16):
                 return(False)
         return(True)
 
+
 def main():
     DigitSpan.run()
+
 
 if __name__ == '__main__':
     main()

@@ -48,17 +48,18 @@ except ImportError:
     android = None
 
 DEFAULTS = {
-    'change_nback_level' : 'no',
-    'increase_nback_correct_ratio' : 0.8,
-    'decrease_nback_correct_ratio' : 0.5,
-    'canvas_size' : 0.9,
-    'num_boxes' : 9,
-    'colour_grid' : (255, 255, 255),
-    'colour_fixation_cross' : None,
-    'grid_line_width' : '1mm',
-    'antialiasing' : 'yes',
-    'reaction_time_only' : 'no'
+    'change_nback_level': 'no',
+    'increase_nback_correct_ratio': 0.8,
+    'decrease_nback_correct_ratio': 0.5,
+    'canvas_size': 0.9,
+    'num_boxes': 9,
+    'colour_grid': (255, 255, 255),
+    'colour_fixation_cross': None,
+    'grid_line_width': '1mm',
+    'antialiasing': 'yes',
+    'reaction_time_only': 'no'
 }
+
 
 class NBack():
     @staticmethod
@@ -69,14 +70,14 @@ class NBack():
         nback.start()
 
         # TODO
-        #if SHOW_TUTORIAL:
+        # if SHOW_TUTORIAL:
         #    [showInstructions(exp, n) for n in SHOW_TUTORIAL]
 
         s = {}
         for id in range(exp.config.getint('DESIGN', 'blocks')):
             block = nback.prepare_block(id, s)
             summary = nback.run_block(block)
-            s = summary # TODO if not block.get_factor('Practice') else s
+            s = summary  # TODO if not block.get_factor('Practice') else s
 
         exp._log_experiment()
 
@@ -88,25 +89,25 @@ class NBack():
         if not android:
             self.exp.mouse.show_cursor()
 
-
         # OPTIONAL OPTIONS
         self.line_width = self.exp._unit(self.exp.config.get('APPEARANCE', 'grid_line_width'))
         rel_canvas_size = self.exp.config.getfloat('APPEARANCE', 'canvas_size')
         rel_canvas_size = self.exp.config.getfloat('APPEARANCE', 'canvas_size')
         self.canvas_size = int(
             min(self.exp.screen.window_size[0],
-            self.exp.screen.window_size[1] -
+                self.exp.screen.window_size[1] -
                 self.exp._unit(self.exp.config.get('APPEARANCE',
-                    'button_height')) * 2) * rel_canvas_size)
+                                                   'button_height')) * 2) * rel_canvas_size)
         self.num_boxes = self.exp.config.getint('DESIGN', 'num_boxes')
 
         self.break_duration = self.exp.config.gettuple('DESIGN', 'break_duration')
         self.display_duration = self.exp.config.getint('DESIGN', 'display_duration')
-        self.button_highlight_duration = self.exp.config.getint('DESIGN', 'button_highlight_duration')
+        self.button_highlight_duration = self.exp.config.getint(
+            'DESIGN', 'button_highlight_duration')
 
         self.trial_options = {
-            'P' : list(range(self.num_boxes)),
-            'C' : self.exp._colours(self.exp.config.get('DESIGN', 'colours'))
+            'P': list(range(self.num_boxes)),
+            'C': self.exp._colours(self.exp.config.get('DESIGN', 'colours'))
         }
         # allow for one colour only
         if type(self.trial_options['C'][0]) is int:
@@ -130,30 +131,32 @@ class NBack():
             block.set_factor('nback', 1)
             block.set_factor('nback_mode', 'P')
             if self.exp.config.has_option('DESIGN', 'repeat_probability'):
-                block.set_factor('repeat_probability', self.exp.config.getfloat('DESIGN', 'repeat_probability'))
+                block.set_factor('repeat_probability', self.exp.config.getfloat(
+                    'DESIGN', 'repeat_probability'))
             else:
                 block.set_factor('repeat_probability', 1)
         else:
             block.set_factor('nback', self.exp.config.getforblock('DESIGN', 'nback', id))
             block.set_factor('nback_mode', self.exp.config.getforblock('DESIGN', 'nback_mode', id))
-            block.set_factor('repeat_probability', self.exp.config.getfloat('DESIGN', 'repeat_probability'))
+            block.set_factor('repeat_probability', self.exp.config.getfloat(
+                'DESIGN', 'repeat_probability'))
         block.set_factor('trials', self.exp.config.getforblock('DESIGN', 'trials', id))
 
-        self.modes = {'P' : 'mode_position',
-            'C' : 'mode_colour'}
+        self.modes = {'P': 'mode_position',
+                      'C': 'mode_colour'}
 
         if not block.get_factor('reaction_time_only'):
             mode_text = (_('mode_connector') + ' ').join(
                 ', '.join([_(self.modes[M]) for M in
-                    block.get_factor('nback_mode')]
-                    ).rsplit(', ', 1))
+                           block.get_factor('nback_mode')]
+                          ).rsplit(', ', 1))
             block.set_factor('mode_text', mode_text)
 
         if prev_block and self.exp.config.getboolean('DESIGN', 'change_nback_level'):
             block.set_factor('nback', max(1,
-                prev_block['nback'] +
-                prev_block['correct_ratio'] >= self.exp.config.getfloat('DESIGN', 'increase_nback_correct_ratio') -
-                prev_block['correct_ratio'] < self.exp.config.getfloat('DESIGN', 'decrease_nback_correct_ratio')))
+                                          prev_block['nback'] +
+                                          prev_block['correct_ratio'] >= self.exp.config.getfloat('DESIGN', 'increase_nback_correct_ratio') -
+                                          prev_block['correct_ratio'] < self.exp.config.getfloat('DESIGN', 'decrease_nback_correct_ratio')))
 
         for i, trial_item in enumerate(NBack.compute_trial_items(block, self.trial_options)):
             block.add_trial(self.prepare_trial(block, trial_item, i))
@@ -175,7 +178,8 @@ class NBack():
             else:
                 trial.set_factor(k, item[k])
 
-        s = stimuli.Rectangle([sz, sz], position=[(item['P'] % bx + 0.5) * sz - ctr, (item['P'] // bx + 0.5) * sz - ctr], colour=item['C'])
+        s = stimuli.Rectangle([sz, sz], position=[(item['P'] % bx + 0.5) *
+                                                  sz - ctr, (item['P'] // bx + 0.5) * sz - ctr], colour=item['C'])
         trial.add_stimulus(s)
 
         return(trial)
@@ -191,15 +195,19 @@ class NBack():
         self.exp._show_message('', 'block_start', format=block.factor_dict)
 
         wait = randint(self.break_duration[0], self.break_duration[1])
-        self.exp.clock.wait(wait - self.canvas.present() - block.trials[0].stimuli[0].plot(next_canvas) - next_canvas.preload())
+        self.exp.clock.wait(wait - self.canvas.present() -
+                            block.trials[0].stimuli[0].plot(next_canvas) - next_canvas.preload())
         for i, trial in enumerate(block.trials):
             next_canvas, wait = self.run_trial(block, trial, i, next_canvas, wait)
 
         smry = self.exp._log_block(block)
-        filterNone = lambda l: [i for i in l if i != None]
+
+        def filterNone(l): return [i for i in l if i != None]
         # create some helpers for the on-screen feedback
-        smry_counts = {'len(' + str(k) + ')' : sum(filterNone(smry[k])) for k in smry if type(smry[k]) is list and type(smry[k][0]) in (int, float)}
-        smry_counts.update({'mean(' + str(k) + ')' : (sum(filterNone(smry[k])) * 1.0 / len(smry[k])) for k in smry if type(smry[k]) is list and type(smry[k][0]) in (int, float)})
+        smry_counts = {'len(' + str(k) + ')': sum(filterNone(smry[k])) for k in smry if type(
+            smry[k]) is list and type(smry[k][0]) in (int, float)}
+        smry_counts.update({'mean(' + str(k) + ')': (sum(filterNone(smry[k])) * 1.0 / len(
+            smry[k])) for k in smry if type(smry[k]) is list and type(smry[k][0]) in (int, float)})
         smry_counts.update(smry)
         self.exp._show_message('', 'block_finished', format=smry_counts)
         return(smry)
@@ -214,16 +222,19 @@ class NBack():
         oldwait = wait
         while True:
             if show:
-                t = min(self.display_duration - self.exp.clock.stopwatch_time, self.display_duration if not highlight else self.button_highlight_duration)
+                t = min(self.display_duration - self.exp.clock.stopwatch_time,
+                        self.display_duration if not highlight else self.button_highlight_duration)
             else:
                 if not loaded_next_trial:
                     next_canvas = self.new_canvas()
                     self.canvas.present()
-                    block.trials[id+1].stimuli[0].plot(next_canvas) if len(block.trials) > id + 1 else []
+                    block.trials[id +
+                                 1].stimuli[0].plot(next_canvas) if len(block.trials) > id + 1 else []
                     next_canvas.preload()
                     wait = randint(self.break_duration[0], self.break_duration[1])
                     loaded_next_trial = True
-                t = min(wait + self.display_duration - self.exp.clock.stopwatch_time, wait + self.display_duration if not highlight else self.button_highlight_duration)
+                t = min(wait + self.display_duration - self.exp.clock.stopwatch_time, wait +
+                        self.display_duration if not highlight else self.button_highlight_duration)
             evt = self.exp.mouse.wait_press(duration=t)
             if not evt[2] and not highlight:
                 if show:
@@ -242,16 +253,17 @@ class NBack():
                 evts.append([overlap[0].label, self.exp.clock.stopwatch_time])
                 stimuli.Rectangle(
                     [s - 2*self.line_width for s in overlap[0].size],
-                    position = overlap[0].position,
-                    line_width = self.line_width * 2,
-                    colour = self.exp._colours(
+                    position=overlap[0].position,
+                    line_width=self.line_width * 2,
+                    colour=self.exp._colours(
                         self.exp.config.get('APPEARANCE', 'button_highlight_colour'))
-                    ).present(clear=None)
+                ).present(clear=None)
                 highlight = True
         if block.get_factor('reaction_time_only'):
             repeat = True if trial.get_factor('repeat') else False
         else:
-            repeat = _(self.modes[trial.get_factor('repeat')]) if trial.get_factor('repeat') else None
+            repeat = _(self.modes[trial.get_factor('repeat')]
+                       ) if trial.get_factor('repeat') else None
         click, rt = None, None
         idx = False
         if len(evts) > 0:
@@ -267,19 +279,19 @@ class NBack():
         if block.get_factor('reaction_time_only'):
             click = type(click) == str
         results = {
-            'wait' : oldwait,
-            'rt' : rt,
-            'pressed_any' : bool(click) + 0,
-            'correct' : bool(click == repeat) + 0,
-            'correct_repeat' : bool(click == repeat and repeat) + 0,
-            'incorrect' : bool(click != repeat) + 0,
-            'missedpositive' : bool((not click) and repeat) + 0,
-            'falsepositive' : bool(click and (not repeat)) + 0,
-            'falsebutton' : bool(click and repeat and not click == repeat) + 0,
-            'corrected' : idx is not False and ('|'.join([str(x) for x in times[0:idx]]) if idx > 0 else False),
-            'not_last_press' : idx is not False and ('|'.join([str(x) for x in times[(idx+1):]]) if len(evts) > idx + 1 else False),
-            'repeat' : repeat,
-            'pressed' : click
+            'wait': oldwait,
+            'rt': rt,
+            'pressed_any': bool(click) + 0,
+            'correct': bool(click == repeat) + 0,
+            'correct_repeat': bool(click == repeat and repeat) + 0,
+            'incorrect': bool(click != repeat) + 0,
+            'missedpositive': bool((not click) and repeat) + 0,
+            'falsepositive': bool(click and (not repeat)) + 0,
+            'falsebutton': bool(click and repeat and not click == repeat) + 0,
+            'corrected': idx is not False and ('|'.join([str(x) for x in times[0:idx]]) if idx > 0 else False),
+            'not_last_press': idx is not False and ('|'.join([str(x) for x in times[(idx+1):]]) if len(evts) > idx + 1 else False),
+            'repeat': repeat,
+            'pressed': click
         }
         self.exp._log_trial(block, trial, results)
         return(next_canvas, wait)
@@ -317,13 +329,15 @@ class NBack():
                     next[m] = trial_options[m][int(len(trial_options[m])/2)]
             next['repeat'] = repeat
             #findnback = lambda l, n: ([l[-n]] if len(l) >= n else []) if MATCH_EXACTLY else l[-n:]
-            findnback = lambda l, n: ([l[-n]] if len(l) >= n else [])
+
+            def findnback(l, n): return ([l[-n]] if len(l) >= n else [])
             if repeat:
                 choose = findnback(log[repeat], nback)
                 next[repeat] = choice(choose) if len(choose) > 0 else choice(trial_options[repeat])
                 for m in mode:
                     avoid = findnback(log[m], nback)
-                    next[m] = choice([x for x in trial_options[m] if x not in avoid]) if not m in next else next[m]
+                    next[m] = choice([x for x in trial_options[m] if x not in avoid]
+                                     ) if not m in next else next[m]
                     log[m].append(next[m])
             else:
                 for m in mode:
@@ -341,31 +355,40 @@ class NBack():
         grid = stimuli.BlankScreen()
 
         colour_grid = self.exp._colours(self.exp.config.get('APPEARANCE', 'colour_grid'))
-        colour_fixation_cross = self.exp._colours(self.exp.config.get('APPEARANCE', 'colour_fixation_cross'))
+        colour_fixation_cross = self.exp._colours(
+            self.exp.config.get('APPEARANCE', 'colour_fixation_cross'))
         antialiasing = 10 if self.exp.config.getboolean('APPEARANCE', 'antialiasing') else None
 
         if colour_grid:
             for a, b in [(i % side, i // side) for i in range(self.num_boxes)]:
-                stimuli.Line((a * block_size - center, b * block_size - center), ((a+1) * block_size - center, b * block_size - center), line_width=self.line_width, colour=colour_grid, anti_aliasing=antialiasing).plot(grid)
-                stimuli.Line((a * block_size - center, b * block_size - center), (a * block_size - center, (b + 1) * block_size - center), line_width=self.line_width, colour=(colour_grid), anti_aliasing=antialiasing).plot(grid)
+                stimuli.Line((a * block_size - center, b * block_size - center), ((a+1) * block_size - center, b *
+                                                                                  block_size - center), line_width=self.line_width, colour=colour_grid, anti_aliasing=antialiasing).plot(grid)
+                stimuli.Line((a * block_size - center, b * block_size - center), (a * block_size - center, (b + 1) *
+                                                                                  block_size - center), line_width=self.line_width, colour=(colour_grid), anti_aliasing=antialiasing).plot(grid)
 
-            stimuli.Line((0 - center, side * block_size - center), (side * block_size - center, side * block_size - center), line_width=self.line_width, colour=colour_grid, anti_aliasing=antialiasing).plot(grid)
-            stimuli.Line((side * block_size - center, 0 - center), (side * block_size - center, side * block_size - center), line_width=self.line_width, colour=colour_grid, anti_aliasing=antialiasing).plot(grid)
+            stimuli.Line((0 - center, side * block_size - center), (side * block_size - center, side * block_size -
+                                                                    center), line_width=self.line_width, colour=colour_grid, anti_aliasing=antialiasing).plot(grid)
+            stimuli.Line((side * block_size - center, 0 - center), (side * block_size - center, side * block_size -
+                                                                    center), line_width=self.line_width, colour=colour_grid, anti_aliasing=antialiasing).plot(grid)
 
         if colour_fixation_cross:
             stimuli.FixCross(colour=colour_fixation_cross).plot(grid)
         grid.preload()
         return(grid)
 
+
 def main():
     NBack.run()
+
 
 if __name__ == '__main__':
     main()
 
+
 def showInstructions(exp, nback):
     size = (WIDTH, HEIGHT) if not ROTATE_SCREEN else (HEIGHT, WIDTH)
-    tut = stimuli.TextScreen(INSTRUCTIONS['caption_tutorial'][LANGUAGE].format(nback=nback), INSTRUCTIONS['tutorial_text'][LANGUAGE].format(nback=nback), size=size, position=(size[0]/3 if ROTATE_SCREEN else 0, -size[1]/3 if not ROTATE_SCREEN else 0))
+    tut = stimuli.TextScreen(INSTRUCTIONS['caption_tutorial'][LANGUAGE].format(nback=nback), INSTRUCTIONS['tutorial_text'][LANGUAGE].format(
+        nback=nback), size=size, position=(size[0]/3 if ROTATE_SCREEN else 0, -size[1]/3 if not ROTATE_SCREEN else 0))
     tut.rotate(90) if ROTATE_SCREEN else tut
     tut.present()
     exp.mouse.wait_press()
@@ -377,23 +400,30 @@ def showInstructions(exp, nback):
     sz = int(self.canvas_size / bx)
     ctr = int(self.canvas_size / 2)
 
-    def drawConnector (text, nback, width):
+    def drawConnector(text, nback, width):
         vtx = stimuli.Shape(line_width=2)
         halfwidth = int(width / 2 * nback)
         height = int(-width / 3)
-        vtx.add_vertices([(-halfwidth*1.4,height), (-halfwidth*0.6,-height), (halfwidth*0.6,height)])
+        vtx.add_vertices([
+            (-halfwidth*1.4, height),
+            (-halfwidth *
+             0.6, -height),
+            (halfwidth*0.6, height)])
         vtx.move((-width / 2 * nback, 0))
         txt = stimuli.TextBox(text, size=(width, width), position=(0, height))
         return(vtx, txt)
 
-    ll = [[5,0,5,6,6,5], ['magenta','green','green','cyan','green','cyan']]
+    ll = [[5, 0, 5, 6, 6, 5], ['magenta', 'green', 'green', 'cyan', 'green', 'cyan']]
     for l in ll:
         pos = not isinstance(l[0], basestring)
         for i, p in enumerate(l):
             if pos:
                 g = littlegrid.copy()
                 g.decompress()
-                stimuli.Rectangle((sz, sz), position=((p % bx + 0.5) * sz - ctr, (p // bx + 0.5) * sz - ctr)).plot(g)
+                stimuli.Rectangle(
+                    (sz, sz),
+                    position=((p % bx + 0.5) * sz -
+                              ctr, (p // bx + 0.5) * sz - ctr)).plot(g)
 
                 g.scale(0.1)
                 g.move((int((i - 2.5) * self.canvas_size / 6), s*2))
@@ -403,7 +433,8 @@ def showInstructions(exp, nback):
                 c.move((int((i - 2.5) * self.canvas_size / 6), -2*s))
                 c.plot(canvas)
             if i >= nback and l[i-nback] == p:
-                vtx, txt = drawConnector(INSTRUCTIONS['tutorial_match'][LANGUAGE].format(nback = nback), nback, self.canvas_size / 6)
+                vtx, txt = drawConnector(INSTRUCTIONS['tutorial_match'][LANGUAGE].format(
+                    nback=nback), nback, self.canvas_size / 6)
                 movey = int(1.0 * s)
                 if not pos:
                     movey -= int(4*s)
@@ -412,9 +443,11 @@ def showInstructions(exp, nback):
                 vtx.plot(canvas)
                 txt.plot(canvas)
         if pos:
-            txt = stimuli.TextBox(INSTRUCTIONS['tutorial_illustration_colour'][LANGUAGE].format(nback = nback), size=(self.canvas_size, 4*s), position=(0,2*s))
+            txt = stimuli.TextBox(INSTRUCTIONS['tutorial_illustration_colour'][LANGUAGE].format(
+                nback=nback), size=(self.canvas_size, 4*s), position=(0, 2*s))
         else:
-            txt = stimuli.TextLine(INSTRUCTIONS['tutorial_illustration_position'][LANGUAGE].format(nback=nback), position=(0,int(-1*s)))
+            txt = stimuli.TextLine(INSTRUCTIONS['tutorial_illustration_position'][LANGUAGE].format(
+                nback=nback), position=(0, int(-1*s)))
         txt.plot(canvas)
     canvas.rotate(90) if ROTATE_SCREEN else canvas
     canvas.present()
