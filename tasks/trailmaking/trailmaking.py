@@ -2,34 +2,40 @@
 # -*- coding: utf-8 -*-
 
 '''
-    TRAIL MAKING TASK
-    as part of a battery of cognitive tasks for expyriment.
+TRAIL-MAKING TASK
+as part of a battery of cognitive tasks for expyriment.
 
-    Documentation on this task can be found here:
-    <https://github.com/mbroedl/cognitive-tasks-for-expyriment>
+Documentation on this task can be found here:
+<https://mbroedl.github.io/cognitive-tasks-for-expyriment/tasks/trailmaking/>
 
-    To run it, you need to have a working copy of python 2.7 or
-    greater, and expyriment (e.g. via pip) 0.7, 0.9, or greater.
+To run it, you need to have a working copy of python 2.7 or
+greater, and expyriment (e.g. via pip) 0.7, 0.9, or greater.
 
-    If you use this experiment for any publications, please make
-    sure to cite the authors:
-    <https://github.com/mbroedl/cognitive-tasks-for-expyriment>
+If you use this experiment for any publications, please make
+sure to cite the authors as explained in the repository:
+<https://mbroedl.github.io/cognitive-tasks-for-expyriment/about/using-and-citing/>
 
-    LICENSE
+MIT License
 
-    The tasks are free software: you can redistribute it and/or
-    modify it under the terms of the GNU General Public License
-    as published by the Free Software Foundation, either version
-    3 of the License, or (at your option) any later version.
+Copyright (c) 2018 Malte Rödl
 
-    The tasks are distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty
-    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
-    the GNU General Public License for more details.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-    You should have received a copy of the GNU General Public
-    License along with the Tasks. If not, see
-    <https://www.gnu.org/licenses/>.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 '''
 
 from expyriment import design, control, stimuli, io, misc

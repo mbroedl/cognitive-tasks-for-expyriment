@@ -1,3 +1,44 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+'''
+BOILERPLATE EXPERIMENT
+to create your own experiments, and make use of the
+_base_expyriment class as part of a battery of cognitive tasks for expyriment.
+
+Documentation on developing can be found here:
+<https://mbroedl.github.io/cognitive-tasks-for-expyriment/howto/developing/>
+
+To run it, you need to have a working copy of python 2.7 or
+greater, and expyriment (e.g. via pip) 0.7, 0.9, or greater.
+
+If you use this experiment for any publications, please make
+sure to cite the authors as explained in the repository:
+<https://mbroedl.github.io/cognitive-tasks-for-expyriment/about/using-and-citing/>
+
+MIT License
+
+Copyright (c) 2018 Malte Rödl
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+'''
+
 from expyriment import design, control, stimuli, io, misc
 from _base_expyriment import BaseExpyriment, _
 try:
