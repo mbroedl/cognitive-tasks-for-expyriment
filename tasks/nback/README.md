@@ -1,3 +1,7 @@
+# N-Back Task
+
+An N-Back task for expyriment.
+
 ## Configuration
 
 ### Experiment Design
