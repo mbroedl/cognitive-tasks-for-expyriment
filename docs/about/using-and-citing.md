@@ -1,7 +1,7 @@
 # Using and Citing these Experiments
 
-All experiments found on this website as well as the website contents itself have been licensed under the GPLv3 License, as is _expyriment_ on which this battery builds on.
-This license is further explained [here](https://choosealicense.com/licenses/gpl-3.0/).
+All experiments found on this website as well as the website contents itself have been licensed under the MIT License, as is _expyriment_ on which this battery builds on.
+This license is further explained [here](https://choosealicense.com/licenses/mit/).
 
 Please make sure to cite this and other works appropriately.
 Particularly, you should cite [expyriment](https://www.expyriment.org/#references):
