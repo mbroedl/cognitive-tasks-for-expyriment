@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''
-BASE EXPYRIMENT CLASS
+""" BASE EXPYRIMENT CLASS.
 providing additional functions and compatibility to expyriment
 versions 0.7 and 0.9, used by all tasks in this battery of cognitive tasks for expyriment.
 
@@ -37,7 +36,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 
 import sys
 import os

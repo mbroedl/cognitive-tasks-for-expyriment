@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''
-DIGIT SPAN TASK
+""" DIGIT SPAN TASK.
 as part of a battery of cognitive tasks for expyriment.
 
 Documentation on this task can be found here:
@@ -36,14 +35,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 
 # keywords for the android app expyriment.initialize()
 from expyriment import design, control, stimuli, io, misc
 from _base_expyriment import BaseExpyriment, _
 from random import random, randint
 from collections import Counter
-from ast import literal_eval
 import difflib
 try:
     import android

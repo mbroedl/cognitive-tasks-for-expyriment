@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''
-TRAIL-MAKING TASK
+"""TRAIL-MAKING TASK.
 as part of a battery of cognitive tasks for expyriment.
 
 Documentation on this task can be found here:
@@ -36,11 +35,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 
 from expyriment import design, control, stimuli, io, misc
 from _base_expyriment import BaseExpyriment, _, python_version
-from random import random, randint
+from random import randint
 import itertools
 try:
     import android
@@ -167,7 +166,7 @@ class TrailMaking():
     def run_block(self, block):
         # self.exp._show_message('', 'click_to_start')
         for trial in block.trials:
-            has_moved_before = self.run_trial(block, trial)
+            self.run_trial(block, trial)
         # self.exp._log_block(block)
 
     def run_trial(self, block, trial):

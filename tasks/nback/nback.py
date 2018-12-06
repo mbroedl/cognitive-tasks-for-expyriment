@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-'''
-N-BACK TASK
+""" N-BACK TASK.
 as part of a battery of cognitive tasks for expyriment.
 
 Documentation on this task can be found here:
@@ -36,7 +35,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 
 # keywords for the android app expyriment.initialize()
 from expyriment import design, control, stimuli, io, misc
@@ -202,7 +201,7 @@ class NBack():
 
         smry = self.exp._log_block(block)
 
-        def filterNone(l): return [i for i in l if i != None]
+        def filterNone(l): return [i for i in l if i is not None]
         # create some helpers for the on-screen feedback
         smry_counts = {'len(' + str(k) + ')': sum(filterNone(smry[k])) for k in smry if type(
             smry[k]) is list and type(smry[k][0]) in (int, float)}
@@ -396,9 +395,9 @@ def showInstructions(exp, nback):
     s = int(SIZE*0.1)
     canvas = stimuli.Rectangle((SIZE, SIZE), colour=misc.constants.C_BLACK)
     littlegrid = nback.prepare_grid_stimulus(line_width=15)
-    bx = self.exp.config.getint('DESIGN', 'num_boxes')**(0.5)
-    sz = int(self.canvas_size / bx)
-    ctr = int(self.canvas_size / 2)
+    bx = exp.config.getint('DESIGN', 'num_boxes')**(0.5)
+    sz = int(canvas_size / bx)
+    ctr = int(canvas_size / 2)
 
     def drawConnector(text, nback, width):
         vtx = stimuli.Shape(line_width=2)
@@ -426,25 +425,25 @@ def showInstructions(exp, nback):
                               ctr, (p // bx + 0.5) * sz - ctr)).plot(g)
 
                 g.scale(0.1)
-                g.move((int((i - 2.5) * self.canvas_size / 6), s*2))
+                g.move((int((i - 2.5) * canvas_size / 6), s*2))
                 g.plot(canvas)
             else:
                 c = stimuli.Rectangle((int(s/3), int(s/3)), colour=COLOURS[p])
-                c.move((int((i - 2.5) * self.canvas_size / 6), -2*s))
+                c.move((int((i - 2.5) * canvas_size / 6), -2*s))
                 c.plot(canvas)
             if i >= nback and l[i-nback] == p:
                 vtx, txt = drawConnector(INSTRUCTIONS['tutorial_match'][LANGUAGE].format(
-                    nback=nback), nback, self.canvas_size / 6)
+                    nback=nback), nback, canvas_size / 6)
                 movey = int(1.0 * s)
                 if not pos:
                     movey -= int(4*s)
-                vtx.move((int((i - 2.5) * self.canvas_size / 6), movey))
-                txt.move((int((i - 2.5) * self.canvas_size / 6), movey - int(0.5 * s)))
+                vtx.move((int((i - 2.5) * canvas_size / 6), movey))
+                txt.move((int((i - 2.5) * canvas_size / 6), movey - int(0.5 * s)))
                 vtx.plot(canvas)
                 txt.plot(canvas)
         if pos:
             txt = stimuli.TextBox(INSTRUCTIONS['tutorial_illustration_colour'][LANGUAGE].format(
-                nback=nback), size=(self.canvas_size, 4*s), position=(0, 2*s))
+                nback=nback), size=(canvas_size, 4*s), position=(0, 2*s))
         else:
             txt = stimuli.TextLine(INSTRUCTIONS['tutorial_illustration_position'][LANGUAGE].format(
                 nback=nback), position=(0, int(-1*s)))
