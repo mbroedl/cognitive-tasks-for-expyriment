@@ -277,10 +277,8 @@ class BaseExpyriment(design.Experiment):
 
     @staticmethod
     def _invert_colour(colour):
-        if python_version[0] == 3:
-            return({v: k for k, v in COLOURS.items()}[colour])
-        else:
-            return({v: k for k, v in COLOURS.iteritems()}[colour])
+        colour = tuple(colour)
+        return([k for k in COLOURS if COLOURS[k] == colour][0])
 
     def _log_trial(self, *argv):
         if not self.config.has_option('LOG', 'cols_trial'):
