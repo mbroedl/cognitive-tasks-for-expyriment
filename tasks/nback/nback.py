@@ -126,7 +126,7 @@ class NBack():
         if id:
             block._id = id
         if self.exp.config.getboolean('DESIGN', 'reaction_time_only'):
-            block.set_factor('reaction_time_only', True)
+            block.set_factor('reaction_time_only', 'true')
             block.set_factor('nback', 1)
             block.set_factor('nback_mode', 'P')
             if self.exp.config.has_option('DESIGN', 'repeat_probability'):
