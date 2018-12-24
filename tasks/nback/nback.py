@@ -135,11 +135,11 @@ class NBack():
             else:
                 block.set_factor('repeat_probability', 1)
         else:
-            block.set_factor('nback', self.exp.config.getforblock('DESIGN', 'nback', id))
+            block.set_factor('nback', self.exp.config.getforblock('DESIGN', 'nback', id, cast=int))
             block.set_factor('nback_mode', self.exp.config.getforblock('DESIGN', 'nback_mode', id))
             block.set_factor('repeat_probability', self.exp.config.getfloat(
                 'DESIGN', 'repeat_probability'))
-        block.set_factor('trials', self.exp.config.getforblock('DESIGN', 'trials', id))
+        block.set_factor('trials', self.exp.config.getforblock('DESIGN', 'trials', id, cast=int))
 
         self.modes = {'P': 'mode_position',
                       'C': 'mode_colour'}

@@ -40,6 +40,7 @@ SOFTWARE.
 
 import sys
 import os
+import re
 from ast import literal_eval
 from expyriment import design, control, stimuli, io, misc
 
@@ -47,12 +48,6 @@ from expyriment import __version__ as _expyriment_version
 from sys import version as _python_version
 expyriment_version = [int(i) for i in _expyriment_version.split('.')]
 python_version = [int(i) for i in _python_version.split(' ')[0].split('.')]
-
-
-if python_version >= [3]:
-    from configparser import RawConfigParser, NoOptionError, NoSectionError
-else:
-    from ConfigParser import RawConfigParser, NoOptionError, NoSectionError
 
 try:
     import android
@@ -182,7 +177,7 @@ class BaseExpyriment(design.Experiment):
         d1 = DEFAULTS.copy()
         d1.update(defaults)
         d1 = {k: str(v) for k, v in d1.items()}
-        self.config = CustomConfigParser(d1)
+        self.config = ConfigReader(d1)
         self.config.read(['config.conf', 'i18n.conf'])
 
         global i18n
@@ -570,67 +565,104 @@ class LogFile(io.OutputFile):
         else:
             self.write_line(io.DataFile._typecheck_and_cast2str(data))
 
+class ConfigReader():
+    def __init__(self, defaults={}):
+        self.defaults = defaults
+        self.error_string = 'Configuration Option [{}] -> {} '
+        self.regex_key = r'(\w+)\s*=\s*(.*)'
 
-class CustomConfigParser(RawConfigParser):
-    def get(self, section, option, default=None, **kwargs):
+    def read(self, files):
+        section = 'DEFAULTS'
+        config = {section:{}}
+
+        if type(files) is str: files = [files]
+        for fname in files:
+            with open(fname, 'r') as f:
+                key_store = None
+                for line in f.readlines():
+                    if not line.strip() or line[0] == '#': continue
+                    if line.startswith('['):
+                        section = line.strip('[]\n ')
+                        config[section] = {}
+                    else:
+                        key = re.match(self.regex_key, line)
+                        if key:
+                            key_store = key.group(1)
+                            config[section][key.group(1)] = key.group(2).strip()
+                        else:
+                            config[section][key_store] += '\n' + line.strip()
+        self.config = config
+
+    def has_section(self, section):
+        return(section in self.config)
+
+    def has_option(self, section, option):
+        return(section in self.config and option in self.config[section])
+
+    def items(self, section):
+        return(self.config[section])
+
+    def get(self, section, option, **kwargs):
+        if self.has_option(section, option):
+            return(self.config[section][option])
+        elif 'default' in kwargs:
+            return(kwargs['default'])
+        elif option in self.defaults:
+            return(self.defaults[option])
+        else:
+            raise ValueError((self.error_string +
+                'not found.').format(section, option))
+
+    def _get(self, section, option, func, **kwargs):
         try:
-            if python_version >= [3]:
-                return RawConfigParser.get(self, section, option, fallback=default, **kwargs)
-            else:
-                return RawConfigParser.get(self, section, option, **kwargs)
-        except (NoOptionError, NoSectionError) as err:
-            print(section, option, default)
-            if not default is None:
-                return str(default)
-            else:
-                raise err
-
-    def _get(self, section, conv, option, default=None, **kwargs):
-        return conv(self.get(section, option, default, **kwargs))
-
-    def getint(self, section, option, default=None):
-        try:
-            return self._get(section, int, option, default)
+            return(func(self.get(section, option, **kwargs)))
         except ValueError:
-            raise ValueError(
-                'Configuration option [{}]:{} needs to be a whole number.'.format(section, option))
+            raise ValueError((self.error_string + 'could not be coerced to' +
+                'the {} datatype.').format(section, option, func.__name__))
 
-    def getfloat(self, section, option, default=None):
-        try:
-            return self._get(section, float, option, default)
-        except ValueError:
-            raise ValueError(
-                'Configuration option [{}]:{} needs to be a number.'.format(section, option))
+    def getint(self, section, option, **kwargs):
+        return(self._get(section, option, int, **kwargs))
 
-    def getboolean(self, section, option, default=None):
-        try:
-            return RawConfigParser.getboolean(self, section, option)
-        except (NoOptionError, NoSectionError) as err:
-            if not default is None:
-                return boolean(default)
-            else:
-                raise err
+    def getfloat(self, section, option, **kwargs):
+        return(self._get(section, option, float, **kwargs))
 
-    def gettuple(self, section, option, default=None, assert_length=None, allow_single=False, cast_float=False):
-        value = self.get(section, option, default).strip()
+    def gettuple(self, section, option, assert_length=None, allow_single=False, cast=int, **kwargs):
+        value = self.get(section, option, **kwargs).strip()
         if value.lower() == 'none' or value == '':
             return(None)
+
         if value[0] in '[(' and value[-1] in ')]':
             value = value[1:-1]
-        t = [v.strip() for v in value.split(',') if v.strip()]
+        tpl = [v.strip() for v in value.split(',') if v.strip()]
         try:
-            t = [float(v) for v in t] if cast_float else [int(v) for v in t]
+            tpl = [cast(v) for v in tpl] if cast else tpl
         except ValueError:
-            pass
-        if assert_length is None or \
-                len(t) == assert_length or \
-                allow_single and len(t) == 1:
-            return(t)
-        raise ValueError('Configuration option [{}]:{} needs to have exactly {}{} elements.'.format(
-            section, option, assert_length, ' or 1' if allow_single else ''))
+            raise ValueError((self.error_string + 'could not be coerced ' +
+                'completely to the {} datatype.').format(section, option,
+                    cast.__name__))
 
-    def getforblock(self, section, option, block_id):
-        value = self.gettuple(section, option,
-                              assert_length=self.getint('DESIGN', 'blocks'),
-                              allow_single=True)
-        return(value[0] if len(value) == 1 else value[block_id])
+        if assert_length is None or \
+            len(tpl) == assert_length or \
+                allow_single and len(tpl) == 1:
+            return(tpl)
+        else:
+            raise ValueError((self.error_string + 'needs to have exactly ' +
+                '{}{} elements.').format(section, option, assert_length,
+                    ' or 1' if allow_single else ''))
+
+    def getboolean(self, section, option, **kwargs):
+        item = self.get(section, option, **kwargs).lower()
+        if item in ['yes', 'true', 'ok', '1']:
+            return(True)
+        elif item in ['no', 'false', '0']:
+            return(False)
+        else:
+            raise ValueError((self.error_string +
+                'is not a valid boolean. yes, no, true, false, ok,' +
+                '1, 0 are allowed').format(section, option))
+
+    def getforblock(self, section, option, block_id, cast=None, **kwargs):
+        tpl = self.gettuple(section, option,
+                          assert_length=self.getint('DESIGN', 'blocks'),
+                          allow_single=True, cast=cast, **kwargs)
+        return(tpl[0] if len(tpl) == 1 else tpl[block_id])

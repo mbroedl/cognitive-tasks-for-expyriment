@@ -127,11 +127,11 @@ class TrailMaking():
 
     def prepare_block(self, id):
         block = design.Block()
-        block.set_factor('num_targets', self.exp.config.getforblock('DESIGN', 'num_targets', id))
+        block.set_factor('num_targets', self.exp.config.getforblock('DESIGN', 'num_targets', id, cast=int))
         block.set_factor('target_titles', self.exp.config.getforblock(
             'DESIGN', 'target_titles', id))
-        block.set_factor('timeout', self.exp.config.getforblock('DESIGN', 'timeout', id))
-        for t in range(self.exp.config.getforblock('DESIGN', 'trials', id)):
+        block.set_factor('timeout', self.exp.config.getforblock('DESIGN', 'timeout', id, cast=int))
+        for t in range(self.exp.config.getforblock('DESIGN', 'trials', id, cast=int)):
             block.add_trial(self.prepare_trial(block))
         self.exp.add_block(block)
 
