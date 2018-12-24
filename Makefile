@@ -22,6 +22,7 @@ mkdir:
 $(EXPERIMENTS): %:
 	@mkdir -p build/$*
 	$(COMPILER) tasks/$*/$*.py $(COMPILER_OUTPUT) build/$*/$*.py
+	@sed -i '2i# -*- coding: utf-8 -*-' build/$*/$*.py
 	@cp tasks/$*/$(CONFIG) build/$*/
 	@cp tasks/$*/$(I18N) build/$*/
 
