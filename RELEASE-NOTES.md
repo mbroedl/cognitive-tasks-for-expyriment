@@ -1,6 +1,16 @@
 # Release Notes
 
-## 0.1.1 Initial Release (2018-11-30)
+## 0.1.3 (2019-01-24)
+
+Some versions of the android app did not start the main-function automatically. This is fixed now.
+All tasks have been tested and shown to work.
+
+## 0.1.2 (2018-12-24)
+
+The ConfigParser class was replaced with a custom class as this was not available on the Android app.
+Furthermore some bugs regarding python2/3 compatibility were fixed.
+
+## 0.1.1 (2018-11-30)
 
 Four tasks added:
 
