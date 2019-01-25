@@ -635,7 +635,10 @@ class ConfigReader():
             value = value[1:-1]
         tpl = [v.strip() for v in value.split(',') if v.strip()]
         try:
-            tpl = [cast(v) for v in tpl] if cast else tpl
+            if cast == 'bool' or cast == bool:
+                tpl = [self._bool(v, section, option) for v in tpl]
+            else:
+                tpl = [cast(v) for v in tpl] if cast else tpl
         except ValueError:
             raise ValueError((self.error_string + 'could not be coerced ' +
                 'completely to the {} datatype.').format(section, option,
@@ -651,7 +654,10 @@ class ConfigReader():
                     ' or 1' if allow_single else ''))
 
     def getboolean(self, section, option, **kwargs):
-        item = self.get(section, option, **kwargs).lower()
+        return self._bool(self.get(section, option, **kwargs), section, option)
+
+    def _bool(self, item, section='', option=''):
+        item = item.lower()
         if item in ['yes', 'true', 'ok', '1']:
             return(True)
         elif item in ['no', 'false', '0']:
