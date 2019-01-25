@@ -102,7 +102,6 @@ class DigitSpan():
 
     def start(self):
         self.exp._start()
-        self.exp._show_message('', 'instruction')
 
     def run_block(self, block_id=None):
         block = design.Block()
@@ -111,6 +110,8 @@ class DigitSpan():
         block.set_factor('starting_length', self.exp.config.getint('DESIGN', 'starting_length'))
         block.set_factor('reverse', int(self.exp.config.getboolean('DESIGN', 'reverse')))
         seq_length = self.exp.config.getint('DESIGN', 'starting_length')
+        self.exp._show_message('', 'instruction_reverse' if
+            block.get_factor('reverse') else 'instruction')
         for t in range(self.exp.config.getint('DESIGN', 'trials')):
             correct = self.run_trial(block, seq_length, trial_id=t+1)
             seq_length += 1 if correct else -1
@@ -130,7 +131,9 @@ class DigitSpan():
 
         self.exp._log_trial(block, trial,
                             {'correct': correct, 'user_input': user_input},
-                            DigitSpan.evaluate_trial(user_input[::-1] if block.get_factor('reverse') else user_input, trial.get_factor('sequence')))
+                              DigitSpan.evaluate_trial(user_input[::-1] if
+                                block.get_factor('reverse') else user_input,
+                              trial.get_factor('sequence')))
         return(correct)
 
     def prepare_trial(self, key):
@@ -158,6 +161,7 @@ class DigitSpan():
         self.exp.clock.wait(duration_display / 2 - stimuli.BlankScreen().present())
 
     def user_answer(self, block, trial):
+        reverse = block.get_factor('reverse')
         correct_answer = trial.get_factor('sequence')
         seq_length = trial.get_factor('sequence_length')
         input_method = self.exp.config.get('ANDROID', 'input_method')
@@ -165,19 +169,23 @@ class DigitSpan():
             android.show_keyboard()
         self.exp.keyboard.clear()
         if not android or input_method == 'keyboard' or input_method == 'none':
-            user_input = io.TextInput(_('remember_sequence'), length=seq_length,
-                        position=self.input_offset,
-                        user_text_size=self.input_text_size).get().strip()
+            user_input = io.TextInput(_('remember_sequence_reverse') if
+                                        reverse else _('remember_sequence'),
+                                        length=seq_length,
+                                        position=self.input_offset,
+                                        user_text_size=self.input_text_size
+                                    ).get().strip()
             android.hide_keyboard() if android else None
         else:
             pass
-        answer = user_input[::-1] if block.get_factor('reverse') else user_input
+        answer = user_input[::-1] if reverse else user_input
         format = {'sequence': correct_answer,
-                  'sequence_length': seq_length}
+                  'sequence_length': seq_length,
+                  'sequence_reverse': correct_answer[::-1]}
         if answer.strip() == correct_answer:
             self.exp._show_message('', 'correct_trial', format=format)
         else:
-            self.exp._show_message('', 'incorrect_trial', format=format)
+            self.exp._show_message('', 'incorrect_trial_reverse' if reverse else 'incorrect_trial', format=format)
         return(answer == correct_answer, user_input)
 
     def end(self):
