@@ -43,15 +43,23 @@ In the following, the default options are listed.
 
 ```ini
 [APPEARANCE]
-# offset of the displayed numbers and the input box;
+# offset of the displayed numbers;
 # the first value is x offset, the second value y offset
-offset = (0, 0)
+stimulus_offset = (0, 0)
+# offset of the input box
+input_offset = (0, 0)
 # the colour of the stimulus in RGB values
 stimulus_colour = (255, 255, 255)
 # scale of the stimulus compared to normal text
 stimulus_text_size_scale = 6
 # scale of the input filed compared to normal text
 input_text_size_scale = 3
+
+[ANDROID]
+## android specific configuration ##
+# offset of the input field (see above) as it might overlap
+# with the on-screen keyboard
+input_offset = (0, 200)
 ```
 
 ### Logging the Experiment

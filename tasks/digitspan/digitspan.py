@@ -49,7 +49,8 @@ except ImportError:
     android = None
 
 DEFAULTS = {
-    'offset': (0, 0),
+    'stimulus_offset': (0, 0),
+    'input_offset': (0, 0),
     'foreground_colour': (255, 255, 255),
     'stimulus_colour': (255, 255, 255),
     'background_colour': (0, 0, 0),
@@ -85,7 +86,8 @@ class DigitSpan():
         # OPTIONAL OPTIONS
         if self.exp.config.has_section('APPEARANCE'):
             pass
-        self.offset = self.exp.config.gettuple('APPEARANCE', 'offset', assert_length=2)
+        self.stimulus_offset = self.exp.config.gettuple('APPEARANCE', 'stimulus_offset', assert_length=2)
+        self.input_offset = self.exp.config.gettuple('ANDROID' if android else 'APPEARANCE', 'input_offset', assert_length=2)
         self.stimulus_text_size = design.defaults.experiment_text_size * \
             self.exp.config.getint('APPEARANCE', 'stimulus_text_size_scale')
         self.input_text_size = design.defaults.experiment_text_size * \
@@ -137,7 +139,7 @@ class DigitSpan():
             trial.add_stimulus(
                 stimuli.TextLine(
                     key_pos,
-                    position=self.offset,
+                    position=self.stimulus_offset,
                     text_colour=self.stimulus_colour,
                     text_size=self.stimulus_text_size))
         trial.set_factor('sequence', key)
@@ -161,6 +163,7 @@ class DigitSpan():
         android.show_keyboard() if android else None
         self.exp.keyboard.clear()
         user_input = io.TextInput(_('remember_sequence'), length=seq_length,
+                                  position=self.input_offset,
                                   user_text_size=self.input_text_size).get().strip()
         android.hide_keyboard() if android else None
         answer = user_input[::-1] if block.get_factor('reverse') else user_input
