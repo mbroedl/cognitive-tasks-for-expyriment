@@ -110,8 +110,6 @@ class DigitSpan():
         block.set_factor('starting_length',
                             self.exp.config.getforblock('DESIGN',
                                 'starting_length', block_id-1, cast=int))
-        print(self.exp.config.getforblock('DESIGN', 'reverse',
-            block_id-1, cast=bool))
         block.set_factor('reverse',
                             int(self.exp.config.getforblock('DESIGN',
                                 'reverse', block_id-1, cast=bool)))
