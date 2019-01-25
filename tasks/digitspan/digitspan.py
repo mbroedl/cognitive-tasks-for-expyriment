@@ -160,12 +160,17 @@ class DigitSpan():
     def user_answer(self, block, trial):
         correct_answer = trial.get_factor('sequence')
         seq_length = trial.get_factor('sequence_length')
-        android.show_keyboard() if android else None
+        input_method = self.exp.config.get('ANDROID', 'input_method')
+        if android and input_method == 'keyboard':
+            android.show_keyboard()
         self.exp.keyboard.clear()
-        user_input = io.TextInput(_('remember_sequence'), length=seq_length,
-                                  position=self.input_offset,
-                                  user_text_size=self.input_text_size).get().strip()
-        android.hide_keyboard() if android else None
+        if not android or input_method == 'keyboard' or input_method == 'none':
+            user_input = io.TextInput(_('remember_sequence'), length=seq_length,
+                        position=self.input_offset,
+                        user_text_size=self.input_text_size).get().strip()
+            android.hide_keyboard() if android else None
+        else:
+            pass
         answer = user_input[::-1] if block.get_factor('reverse') else user_input
         format = {'sequence': correct_answer,
                   'sequence_length': seq_length}
