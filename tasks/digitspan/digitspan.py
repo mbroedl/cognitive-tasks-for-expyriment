@@ -107,12 +107,23 @@ class DigitSpan():
         block = design.Block()
         if block_id:
             block._id = block_id
-        block.set_factor('starting_length', self.exp.config.getint('DESIGN', 'starting_length'))
-        block.set_factor('reverse', int(self.exp.config.getboolean('DESIGN', 'reverse')))
-        seq_length = self.exp.config.getint('DESIGN', 'starting_length')
+        block.set_factor('starting_length',
+                            self.exp.config.getforblock('DESIGN',
+                                'starting_length', block_id-1, cast=int))
+        print(self.exp.config.getforblock('DESIGN', 'reverse',
+            block_id-1, cast=bool))
+        block.set_factor('reverse',
+                            int(self.exp.config.getforblock('DESIGN',
+                                'reverse', block_id-1, cast=bool)))
+        block.set_factor('sequence_type',
+                            self.exp.config.getforblock('DESIGN',
+                                'sequence_type', block_id-1))
+        seq_length = block.get_factor('starting_length')
         self.exp._show_message('', 'instruction_reverse' if
             block.get_factor('reverse') else 'instruction')
-        for t in range(self.exp.config.getint('DESIGN', 'trials')):
+        block.set_factor('trials', self.exp.config.getforblock('DESIGN',
+                            'trials', block_id-1, cast=int))
+        for t in range(block.get_factor('trials')):
             correct = self.run_trial(block, seq_length, trial_id=t+1)
             seq_length += 1 if correct else -1
             seq_length = max(seq_length, 1)
@@ -120,7 +131,7 @@ class DigitSpan():
         self.exp._log_block(block)
 
     def run_trial(self, block, seq_length, trial_id=None):
-        key = DigitSpan.generate_key(seq_length, self.exp.config.get('DESIGN', 'sequence_type'))
+        key = DigitSpan.generate_key(seq_length, block.get_factor('sequence_type'))
         trial = self.prepare_trial(key)
         if trial_id:
             trial._id = trial_id
