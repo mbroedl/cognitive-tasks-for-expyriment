@@ -5,6 +5,7 @@
 * Makefile: got minutes wanted months
 * _base_expyriment
     - Config option for `experiment_text_size` in `[GENERAL]`, which should scale all dependent text sizes downstream; defaults (like expyriment) to 20
+    - _show_message now passes `**kwargs` and can stall the screen before continuation is possible
 
 ## 0.1.3 (2019-01-24)
 

@@ -189,10 +189,13 @@ class BaseExpyriment(design.Experiment):
         if self.config.has_option('DEVELOPMENT', 'active') and self.config.getboolean('DEVELOPMENT', 'active'):
             self._dev_mode = True
 
-    def _show_message(self, caption, text, format={}, response='both'):
+    def _show_message(self, caption, text, format={}, response='both',
+                      stall=0, **kwargs):
         if caption == 'SKIP' or text == 'SKIP':
             return()
-        stimuli.TextScreen(_(caption).format(**format), _(text).format(**format)).present()
+        stimuli.TextScreen(_(caption).format(**format),
+                _(text).format(**format), **kwargs).present()
+        self.clock.wait(stall)
         self.keyboard.clear()
         self.mouse.clear()
         while True:
