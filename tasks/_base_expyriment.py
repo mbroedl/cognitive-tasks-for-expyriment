@@ -203,9 +203,22 @@ class BaseExpyriment(design.Experiment):
         return(block)
 
     def _show_message(self, caption, text, format={}, response='both',
-                      stall=0, **kwargs):
+                      stall=0, block=None, **kwargs):
         if caption == 'SKIP' or text == 'SKIP':
             return()
+        if block:
+            if block.get_factor('practice'):
+                if _(caption + '[practice]') is not None:
+                    caption += '[practice]'
+                if _(text + '[practice]') is not None:
+                    text += '[practice]'
+            block_specific = '[block:{}]'.format(block.id)
+            if _(caption + block_specific) is not None:
+                caption += block_specific
+            if _(text + block_specific) is not None:
+                text += block_specific
+        if _(caption + '[highlight]') and _(caption + '[highlight]').lower() in ['yes', 'true', '1']:
+            kwargs.update({'heading_bold':True, 'heading_colour':(255,0,0)})
         stimuli.TextScreen(_(caption).format(**format),
                 _(text).format(**format), **kwargs).present()
         self.clock.wait(stall)
@@ -597,7 +610,7 @@ class ConfigReader():
     def __init__(self, defaults={}):
         self.defaults = defaults
         self.error_string = 'Configuration Option [{}] -> {} '
-        self.regex_key = r'(\w+)\s*=\s*(.*)'
+        self.regex_key = r'([\w:\[\]]+)\s*=\s*(.*)'
 
     def read(self, files):
         section = 'DEFAULTS'

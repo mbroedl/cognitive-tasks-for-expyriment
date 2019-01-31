@@ -5,9 +5,16 @@
 * Makefile: got minutes wanted months
 * _base_expyriment
     - Config option for `experiment_text_size` in `[GENERAL]`, which should scale all dependent text sizes downstream; defaults (like expyriment) to 20
-    - _show_message now passes `**kwargs` and can stall the screen before continuation is possible
-    - new function `_load_block_settings` appends settings to block (trial possible as well) dynamically
     - new function `_load_block_settings` appends settings to block (trial possible as well) dynamically and adds factors to block and trial output if varying across blocks
+    - _show_message
+        - now passes `**kwargs` to stimuli.TextScreen
+        - can stall the screen (`stall=` in ms) before continuation is possible
+        - a block can be passed (`block=`) to allow customised captions:
+        - all texts can now be adjusted to a practice block using `caption_key[practice]`
+        - specific blocks can have different texts using for example `caption_key[block:2]` (1-indexed)
+        - captions (the top) can now be highlighted (bold + red) using `caption_key[highlight] = yes`
+        - they can all be combined in the order listed here, so
+          `caption_key[practice][block:2][highlight]` highlights caption_key in block two if it is a practice block
 
 ## 0.1.3 (2019-01-24)
 
