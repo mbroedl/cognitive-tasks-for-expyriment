@@ -6,6 +6,8 @@
 * _base_expyriment
     - Config option for `experiment_text_size` in `[GENERAL]`, which should scale all dependent text sizes downstream; defaults (like expyriment) to 20
     - _show_message now passes `**kwargs` and can stall the screen before continuation is possible
+    - new function `_load_block_settings` appends settings to block (trial possible as well) dynamically
+    - new function `_load_block_settings` appends settings to block (trial possible as well) dynamically and adds factors to block and trial output if varying across blocks
 
 ## 0.1.3 (2019-01-24)
 

@@ -154,6 +154,7 @@ class BaseExpyriment(design.Experiment):
         self.trialdata = None
         self.trial_log = None
         self.block_log = None
+        self.by_block_vars = []
         self.experiment_log = None
         self.dev_log = None
 
@@ -188,6 +189,18 @@ class BaseExpyriment(design.Experiment):
         self._dev_mode = False
         if self.config.has_option('DEVELOPMENT', 'active') and self.config.getboolean('DEVELOPMENT', 'active'):
             self._dev_mode = True
+
+    def _load_block_settings(self, block, settings=[], section='DESIGN'):
+        if self.config.has_option(section, 'practice'):
+            settings = settings + [('practice', bool)]
+        for setting, cast in settings:
+            block_var = self.config.getforblock(section, setting, block.id - 1, cast=cast)
+            if cast == bool:
+                block_var = int(block_var)
+            block.set_factor(setting, block_var)
+            if self.config.isforblock(section, setting):
+                self.by_block_vars += [setting]
+        return(block)
 
     def _show_message(self, caption, text, format={}, response='both',
                       stall=0, **kwargs):
@@ -286,7 +299,8 @@ class BaseExpyriment(design.Experiment):
 
         args = log_args_to_dict(self, *argv)
         col_names = ['subject', 'session', 'block', 'trial'] + \
-            [col.strip() for col in self.config.get('LOG', 'cols_trial').split(',')]
+            [col.strip() for col in self.config.get('LOG', 'cols_trial').split(',')] + self.by_block_vars
+        col_names = remove_duplicates(col_names)
         columns = log_values_to_cols(col_names, args)
 
         if not self.trialdata:
@@ -311,8 +325,11 @@ class BaseExpyriment(design.Experiment):
 
         args.update(log_args_to_dict(self, *argv))
 
-        col_names = ['subject', 'session', 'block'] + [col.strip()
-                                                       for col in self.config.get('LOG', 'cols_block').split(',')]
+        col_names = ['subject', 'session', 'block'] + \
+                    [col.strip() for col in
+                        self.config.get('LOG', 'cols_block').split(',')] + \
+                    self.by_block_vars
+        col_names = remove_duplicates(col_names)
 
         if not self.block_log:
             self.block_log = LogFile(filename=self.config.get('LOG', 'block_summary_file'),
@@ -512,6 +529,12 @@ def sd(ll): return (sum((x-mean(ll))**2 for x in ll) / (len(ll)-1)) ** 0.5 if le
 
 def var(ll): return sum((x - mean(ll)) ** 2 for x in ll) / len(ll)
 
+def remove_duplicates(ll):
+    new_ll = []
+    for item in ll:
+        if not item in new_ll:
+            new_ll.append(item)
+    return(new_ll)
 
 class LogFile(io.OutputFile):
     def __init__(self, filename, col_names, delimiter=None, comment_char=None, suffix='', directory=''):
@@ -677,3 +700,8 @@ class ConfigReader():
                           assert_length=self.getint('DESIGN', 'blocks'),
                           allow_single=True, cast=cast, **kwargs)
         return(tpl[0] if len(tpl) == 1 else tpl[block_id])
+
+    def isforblock(self, section, option, **kwargs):
+        if len(self.gettuple(section, option, cast=None)) > 1:
+            return(True)
+        return(False)
