@@ -511,7 +511,7 @@ def log_values_to_cols(column_names, data):
                 value = [value[i] for i in range(len(value)) if data[filter][i]]
 
         if func:
-            if func not in ['max', 'min', 'avg', 'mean', 'sum', 'abs', 'len', 'sd', 'var']:
+            if func not in ['max', 'min', 'avg', 'mean', 'sum', 'abs', 'len', 'sd', 'var', 'median']:
                 raise ValueError('Function {} not supported for data summary.'.format(func))
             if type(value) is not list and func != 'abs' and func != 'len':
                 raise TypeError('Could not find a list for summary column {}.'.format(col))
@@ -522,6 +522,8 @@ def log_values_to_cols(column_names, data):
                 value = mean(value)
             elif func == 'sd' or func == 'sdev':
                 value = sd(value)
+            elif func == 'median':
+                value = median(value)
             elif func == 'var' or func == 'variance':
                 value = var(value)
             elif func in __builtins__:
@@ -537,10 +539,18 @@ def log_values_to_cols(column_names, data):
 def mean(ll): return sum(ll) * 1.0 / len(ll) if len(ll) >= 1 else None
 
 
+def median(ll):
+    n = len(ll)
+    if n < 1: return(None)
+    if n % 2 == 1: return(sorted(ll)[n//2])
+    return(sum(sorted(ll)[n//2-1:n//2+1])/2.0)
+
+
 def sd(ll): return (sum((x-mean(ll))**2 for x in ll) / (len(ll)-1)) ** 0.5 if len(ll) >= 2 else None
 
 
 def var(ll): return sum((x - mean(ll)) ** 2 for x in ll) / len(ll)
+
 
 def remove_duplicates(ll):
     new_ll = []

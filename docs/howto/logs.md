@@ -29,6 +29,7 @@ The following functions are provided:
 - `max`, `min` : maximum or minimum value
 - `mean`, `avg`, `sum` : mean/average, sum of a list of numbers
 - `sd`, `var` : standard deviation and variance of a list of numbers
+- `median`: median of a list of numbers
 
 Further, for individual values, the functions `abs` for the absolute value, and `len` for the length of a string, such as the user_input, can be used.
 
