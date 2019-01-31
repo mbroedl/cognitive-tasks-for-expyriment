@@ -7,7 +7,7 @@ EXPERIMENTS = \
 	rt_simple \
 	nback
 
-RELEASE = $(shell date +%Y-%M-%d)
+RELEASE = $(shell date +%Y-%m-%d)
 
 TARGET_FILE = cognitive-tasks-$(RELEASE).zip
 

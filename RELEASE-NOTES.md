@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.2.0 (2019-01-31)
+
+* Makefile: got minutes wanted months
+
 ## 0.1.3 (2019-01-24)
 
 Some versions of the android app did not start the main-function automatically. This is fixed now.
