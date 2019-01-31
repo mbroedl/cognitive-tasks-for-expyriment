@@ -77,7 +77,8 @@ DEFAULTS = {
     'button_border_colour': (80, 80, 80),
     'button_text_colour': 'white',
     'button_highlight_colour': (255, 200, 200),
-    'button_highlight_duration': 50
+    'button_highlight_duration': 50,
+    'experiment_text_size': 20
 }
 
 # PATCHING THE CIRCLE DIAMETER/RADIUS INCOMPATIBILITY
@@ -134,6 +135,7 @@ def _(key): return i18n[key] if key else ''
 class BaseExpyriment(design.Experiment):
     def __init__(self, default_config={}):
         self._load_config(default_config)
+        design.defaults.experiment_text_size = self.config.getint('GENERAL', 'experiment_text_size')
         design.Experiment.__init__(self, _('title'))
         control.set_develop_mode(self._dev_mode)
 

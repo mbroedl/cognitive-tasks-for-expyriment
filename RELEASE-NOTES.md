@@ -3,6 +3,8 @@
 ## 0.2.0 (2019-01-31)
 
 * Makefile: got minutes wanted months
+* _base_expyriment
+    - Config option for `experiment_text_size` in `[GENERAL]`, which should scale all dependent text sizes downstream; defaults (like expyriment) to 20
 
 ## 0.1.3 (2019-01-24)
 

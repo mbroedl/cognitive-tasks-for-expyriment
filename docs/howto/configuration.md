@@ -44,6 +44,11 @@ dpi =
 screen_diagonal =
 # (4) a fallback DPI when no device DPI could be identified
 fallback_dpi = 96
+
+# global setter for the experiment text size;
+# all other values scale proportionally
+# [experiment default: 20]
+experiment_text_size = 20
 ```
 
 Notes on `window_size`:
