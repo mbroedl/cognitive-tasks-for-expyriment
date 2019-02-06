@@ -14,6 +14,15 @@ TARGET_FILE = cognitive-tasks-$(RELEASE).zip
 CONFIG = config.conf
 I18N = i18n.conf
 
+ifeq ($(FORCE),)
+ifneq ($(shell git rev-parse --abbrev-ref HEAD), master)
+$(error Not on branch master)
+endif
+ifneq ($(shell git status -s --untracked-files=no),)
+$(error Uncommited changes to master branch)
+endif
+endif
+
 build: mkdir $(EXPERIMENTS)
 
 mkdir:

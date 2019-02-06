@@ -2,7 +2,9 @@
 
 ## 0.2.0 (2019-01-31)
 
-* Makefile: got minutes wanted months
+* Makefile
+    - build wrongly used minutes instead of months for filenames
+    - now throws an error if not on master or if uncommited changes — can be avoided with any value to the `FORCE` parameter (e.g. `make build FORCE=yes`)
 * _base_expyriment
     - Config option for `experiment_text_size` in `[GENERAL]`, which should scale all dependent text sizes downstream; defaults (like expyriment) to 20
     - new function `_load_block_settings` appends settings to block (trial possible as well) dynamically and adds factors to block and trial output if varying across blocks
