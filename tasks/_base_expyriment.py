@@ -129,7 +129,7 @@ if expyriment_version == [0, 9, 0]:
 i18n = {}
 
 
-def _(key): return(i18n[key] if key in i18n else (None if key else ''))
+def _(key): return(i18n[key].decode('utf-8', 'replace') if key in i18n else (None if key else ''))
 
 
 class BaseExpyriment(design.Experiment):

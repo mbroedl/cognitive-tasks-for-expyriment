@@ -7,6 +7,7 @@
     - Config option for `experiment_text_size` in `[GENERAL]`, which should scale all dependent text sizes downstream; defaults (like expyriment) to 20
     - new function `_load_block_settings` appends settings to block (trial possible as well) dynamically and adds factors to block and trial output if varying across blocks
     - implement `median` function for aggregated output
+    - translations accessed by underscore (`_`) are utf-8 decoded now (previously non-ascii characters could throw an error if they were logged to the events file)
     - _show_message
         - now passes `**kwargs` to stimuli.TextScreen
         - can stall the screen (`stall=` in ms) before continuation is possible
