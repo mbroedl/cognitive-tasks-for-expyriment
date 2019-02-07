@@ -19,6 +19,8 @@
         - captions (the top) can now be highlighted (bold + red) using `caption_key[highlight] = yes`
         - they can all be combined in the order listed here, so
           `caption_key[practice][block:2][highlight]` highlights caption_key in block two if it is a practice block
+* digitspan
+    - introduce separate instruction when the `reverse` flag changed between blocks (`instruction_title_changed`) and delay continuation
 
 ## 0.1.3 (2019-01-24)
 

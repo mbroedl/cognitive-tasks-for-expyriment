@@ -117,8 +117,16 @@ class DigitSpan():
                             self.exp.config.getforblock('DESIGN',
                                 'sequence_type', block_id-1))
         seq_length = block.get_factor('starting_length')
-        self.exp._show_message('', 'instruction_reverse' if
-            block.get_factor('reverse') else 'instruction')
+        instructions_changed = False
+        if block_id > 1 and block.get_factor('reverse') != \
+            int(self.exp.config.getforblock('DESIGN','reverse', block_id-2,
+                cast=bool)):
+            instructions_changed = True
+        self.exp._show_message('instruction_title_changed' if
+             instructions_changed else 'instruction_title',
+             'instruction_reverse' if block.get_factor('reverse') else
+             'instruction', stall=8000, heading_bold=True,
+             heading_colour=(255,0,0) if instructions_changed else None)
         block.set_factor('trials', self.exp.config.getforblock('DESIGN',
                             'trials', block_id-1, cast=int))
         for t in range(block.get_factor('trials')):
