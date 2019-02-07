@@ -8,6 +8,7 @@
 * _base_expyriment
     - Config option for `experiment_text_size` in `[GENERAL]`, which should scale all dependent text sizes downstream; defaults (like expyriment) to 20
     - new function `_load_block_settings` appends settings to block (trial possible as well) dynamically and adds factors to block and trial output if varying across blocks
+    - `getforblock` can now cast to `bool` with the configuration settings (e.g. yes, no)
     - implement `median` function for aggregated output
     - translations accessed by underscore (`_`) are utf-8 decoded now (previously non-ascii characters could throw an error if they were logged to the events file)
     - _show_message
@@ -20,6 +21,10 @@
         - they can all be combined in the order listed here, so
           `caption_key[practice][block:2][highlight]` highlights caption_key in block two if it is a practice block
 * digitspan
+    - separate configuration options for `input_offset` and `stimulus_offset`, and introduce a `[ANDROID]` section with `input_offset` only for Android devices
+    - introduce a `input_method` option for `[ANDROID]` to turn off the on-screen keyboard
+    - make configuration options `trials`, `sequence_type`, `starting_length`, and `reverse` possible to vary by block
+    - introduce separate instructions for trials in reverse order: `instruction_reverse`, `remember_sequence_reverse`, `incorrect_trial_reverse`
     - introduce separate instruction when the `reverse` flag changed between blocks (`instruction_title_changed`) and delay continuation
 
 ## 0.1.3 (2019-01-24)
