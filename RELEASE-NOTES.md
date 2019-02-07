@@ -1,6 +1,6 @@
 # Release Notes
 
-## 0.2.0 (2019-01-31)
+## 0.2.0 (2019-02-07)
 
 * Makefile
     - build wrongly used minutes instead of months for filenames
