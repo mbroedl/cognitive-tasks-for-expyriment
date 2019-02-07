@@ -20,7 +20,10 @@
         - captions (the top) can now be highlighted (bold + red) using `caption_key[highlight] = yes`
         - they can all be combined in the order listed here, so
           `caption_key[practice][block:2][highlight]` highlights caption_key in block two if it is a practice block
-* digitspan
+* simple RT task
+    - revise instructions
+    - add Spanish translation (thanks, Lucía!)
+* digit-span task
     - separate configuration options for `input_offset` and `stimulus_offset`, and introduce a `[ANDROID]` section with `input_offset` only for Android devices
     - introduce a `input_method` option for `[ANDROID]` to turn off the on-screen keyboard
     - make configuration options `trials`, `sequence_type`, `starting_length`, and `reverse` possible to vary by block
