@@ -26,6 +26,7 @@
     - make configuration options `trials`, `sequence_type`, `starting_length`, and `reverse` possible to vary by block
     - introduce separate instructions for trials in reverse order: `instruction_reverse`, `remember_sequence_reverse`, `incorrect_trial_reverse`
     - introduce separate instruction when the `reverse` flag changed between blocks (`instruction_title_changed`) and delay continuation
+    - revised English instructions
 
 ## 0.1.3 (2019-01-24)
 
