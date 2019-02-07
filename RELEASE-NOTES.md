@@ -27,6 +27,7 @@
     - introduce separate instructions for trials in reverse order: `instruction_reverse`, `remember_sequence_reverse`, `incorrect_trial_reverse`
     - introduce separate instruction when the `reverse` flag changed between blocks (`instruction_title_changed`) and delay continuation
     - revised English instructions
+    - added Spanish translation (thanks, Lucía!)
 
 ## 0.1.3 (2019-01-24)
 
