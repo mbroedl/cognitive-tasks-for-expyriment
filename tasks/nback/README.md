@@ -32,11 +32,12 @@ nback_mode = PC
 ## probability of having one characteristic repeated
 repeat_probability = 0.3
 
-## after here everything is universal for all blocks again
 
 ## number of boxes in the grid; they will be arranged in a
 ## square, so a square number is advantageous
 num_boxes = 9
+
+## after here everything is universal for all blocks again
 
 ## colours to vary, can be any of:  black, blue, darkgrey,
 ## expyriment_orange, expyriment_purple, green, grey, red,
@@ -75,6 +76,7 @@ In the following, the default options are listed.
 ## size of the grid relative to smallest screen dimension
 ## the button_height will be reduced on either side of the
 ## screen so it is centred
+## canvas size can vary by block (see above)
 canvas_size = 0.9
 
 ## line width for the grid to be drawn

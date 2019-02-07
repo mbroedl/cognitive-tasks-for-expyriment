@@ -20,6 +20,8 @@
         - captions (the top) can now be highlighted (bold + red) using `caption_key[highlight] = yes`
         - they can all be combined in the order listed here, so
           `caption_key[practice][block:2][highlight]` highlights caption_key in block two if it is a practice block
+* n-back task
+    - configuration for `canvas_size` and `num_boxes` can now vary by block
 * simple RT task
     - revise instructions
     - add Spanish translation (thanks, Lucía!)

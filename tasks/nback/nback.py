@@ -90,29 +90,11 @@ class NBack():
 
         # OPTIONAL OPTIONS
         self.line_width = self.exp._unit(self.exp.config.get('APPEARANCE', 'grid_line_width'))
-        rel_canvas_size = self.exp.config.getfloat('APPEARANCE', 'canvas_size')
-        rel_canvas_size = self.exp.config.getfloat('APPEARANCE', 'canvas_size')
-        self.canvas_size = int(
-            min(self.exp.screen.window_size[0],
-                self.exp.screen.window_size[1] -
-                self.exp._unit(self.exp.config.get('APPEARANCE',
-                                                   'button_height')) * 2) * rel_canvas_size)
-        self.num_boxes = self.exp.config.getint('DESIGN', 'num_boxes')
 
         self.break_duration = self.exp.config.gettuple('DESIGN', 'break_duration')
         self.display_duration = self.exp.config.getint('DESIGN', 'display_duration')
         self.button_highlight_duration = self.exp.config.getint(
             'DESIGN', 'button_highlight_duration')
-
-        self.trial_options = {
-            'P': list(range(self.num_boxes)),
-            'C': self.exp._colours(self.exp.config.get('DESIGN', 'colours'))
-        }
-        # allow for one colour only
-        if type(self.trial_options['C'][0]) is int:
-            self.trial_options['C'] = [self.trial_options['C']]
-
-        self.grid = self.prepare_grid_stimulus()
 
     def start(self):
         self.exp._start()
@@ -123,23 +105,39 @@ class NBack():
 
     def prepare_block(self, id, prev_block={}):
         block = design.Block()
-        if id:
-            block._id = id
+        if type(id) is int:
+            block._id = id + 1
+        block = self.exp._load_block_settings(block, [('trials', int),
+            ('num_boxes', int)])
+        block = self.exp._load_block_settings(block, [('canvas_size', float)],
+                    section='APPEARANCE')
+        button_height = self.exp._unit(self.exp.config.get('APPEARANCE', 'button_height'))
+        self.canvas_size = int(
+            min(self.exp.screen.window_size[0],
+                self.exp.screen.window_size[1] -
+                button_height * 2) * block.get_factor('canvas_size'))
+        self.num_boxes = block.get_factor('num_boxes')
         if self.exp.config.getboolean('DESIGN', 'reaction_time_only'):
             block.set_factor('reaction_time_only', 'true')
             block.set_factor('nback', 1)
             block.set_factor('nback_mode', 'P')
             if self.exp.config.has_option('DESIGN', 'repeat_probability'):
-                block.set_factor('repeat_probability', self.exp.config.getfloat(
-                    'DESIGN', 'repeat_probability'))
+                block = self.exp._load_block_settings(block, [('repeat_probability', float)])
             else:
                 block.set_factor('repeat_probability', 1)
         else:
-            block.set_factor('nback', self.exp.config.getforblock('DESIGN', 'nback', id, cast=int))
-            block.set_factor('nback_mode', self.exp.config.getforblock('DESIGN', 'nback_mode', id))
-            block.set_factor('repeat_probability', self.exp.config.getfloat(
-                'DESIGN', 'repeat_probability'))
-        block.set_factor('trials', self.exp.config.getforblock('DESIGN', 'trials', id, cast=int))
+            block = self.exp._load_block_settings(block, [('nback', int),
+                    ('nback_mode', str), ('repeat_probability', float)])
+
+        self.grid = self.prepare_grid_stimulus()
+
+        self.trial_options = {
+            'P': list(range(self.num_boxes)),
+            'C': self.exp._colours(self.exp.config.get('DESIGN', 'colours'))
+        }
+        # allow for one colour only
+        if type(self.trial_options['C'][0]) is int:
+            self.trial_options['C'] = [self.trial_options['C']]
 
         self.modes = {'P': 'mode_position',
                       'C': 'mode_colour'}
@@ -158,7 +156,7 @@ class NBack():
                                           prev_block['correct_ratio'] < self.exp.config.getfloat('DESIGN', 'decrease_nback_correct_ratio')))
 
         for i, trial_item in enumerate(NBack.compute_trial_items(block, self.trial_options)):
-            block.add_trial(self.prepare_trial(block, trial_item, i))
+            block.add_trial(self.prepare_trial(block, trial_item, i+1))
 
         self.exp.add_block(block)
         return(block)
@@ -167,7 +165,7 @@ class NBack():
         trial = design.Trial()
         if id:
             trial._id = id
-        bx = self.exp.config.getint('DESIGN', 'num_boxes')**(0.5)
+        bx = block.get_factor('num_boxes')**(0.5)
         sz = self.canvas_size / bx
         ctr = self.canvas_size / 2
 
@@ -191,7 +189,9 @@ class NBack():
         self.buttons = self.exp.prepare_button_boxes(labels)
         self.canvas = self.new_canvas()
         next_canvas = self.new_canvas()
-        self.exp._show_message('', 'block_start', format=block.factor_dict)
+        self.exp._show_message('block_start_title', 'block_start',
+            format=block.factor_dict, stall=5000,
+            block=block)
 
         wait = randint(self.break_duration[0], self.break_duration[1])
         self.exp.clock.wait(wait - self.canvas.present() -
