@@ -28,6 +28,8 @@
     - introduce separate instruction when the `reverse` flag changed between blocks (`instruction_title_changed`) and delay continuation
     - revised English instructions
     - added Spanish translation (thanks, Lucía!)
+* trail-making task
+    - added Spanish translation (thanks, Lucía!)
 
 ## 0.1.3 (2019-01-24)
 
