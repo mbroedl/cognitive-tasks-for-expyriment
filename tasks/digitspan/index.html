@@ -229,19 +229,21 @@ The required configuration for experiment design covers the amount of blocks as 
 For example:</p>
 <div class="codehilite"><pre><span></span><span class="k">[DESIGN]</span>
 <span class="na">blocks</span> <span class="o">=</span> <span class="s">1</span>
+<span class="c1"># * number of trials per block, can vary by block</span>
 <span class="na">trials</span> <span class="o">=</span> <span class="s">10</span>
 </pre></div>
 
 
 <p>Optional arguments are described below with their default values:</p>
-<div class="codehilite"><pre><span></span><span class="c1"># the length of the starting sequence as a whole number</span>
+<div class="codehilite"><pre><span></span><span class="c1"># * the length of the starting sequence as a whole number</span>
 <span class="na">starting_length</span> <span class="o">=</span> <span class="s">4</span>
-<span class="c1"># the type of the sequence to be displayed;</span>
+<span class="c1"># * the type of the sequence to be displayed;</span>
 <span class="c1"># one of numeric, alphabetic, or ALPHABETIC</span>
 <span class="na">sequence_type</span> <span class="o">=</span> <span class="s">numeric</span>
-<span class="c1"># whether or not to ask the participant to</span>
-<span class="c1"># repeat the sequence in reversed order (yes/no)</span>
+<span class="c1"># * whether or not to ask the participant to</span>
+<span class="c1"># repeat the sequence in reversed order (yes/no)*</span>
 <span class="na">reverse</span> <span class="o">=</span> <span class="s">no</span>
+
 <span class="c1"># the duration of stimulus display in ms</span>
 <span class="na">duration_display</span> <span class="o">=</span> <span class="s">800</span>
 <span class="c1"># the break between two stimuli in ms</span>
@@ -249,19 +251,30 @@ For example:</p>
 </pre></div>
 
 
+<p>The number of trials, as well as starting length, sequence type, and reversal of sequence (indicated by <code>*</code>) can either be set as one value for the whole experiment, or one value per block.
+So in case of two blocks, it is possible to have <code>sequence_type = numeric</code> or <code>starting_length = 5, 15</code>;
+in this case blocks would use numeric stimuli, but they would start with sequences of length 5 and 15 respectively.</p>
 <h3 id="appearance">Appearance<a class="headerlink" href="#appearance" title="Permanent link">#</a></h3>
 <p>The experiment appearance is covered in the <code>[APPEARANCE]</code> section of the configuration file; there are no required arguments.
 In the following, the default options are listed.</p>
 <div class="codehilite"><pre><span></span><span class="k">[APPEARANCE]</span>
-<span class="c1"># offset of the displayed numbers and the input box;</span>
+<span class="c1"># offset of the displayed numbers;</span>
 <span class="c1"># the first value is x offset, the second value y offset</span>
-<span class="na">offset</span> <span class="o">=</span> <span class="s">(0, 0)</span>
+<span class="na">stimulus_offset</span> <span class="o">=</span> <span class="s">(0, 0)</span>
+<span class="c1"># offset of the input box</span>
+<span class="na">input_offset</span> <span class="o">=</span> <span class="s">(0, 0)</span>
 <span class="c1"># the colour of the stimulus in RGB values</span>
 <span class="na">stimulus_colour</span> <span class="o">=</span> <span class="s">(255, 255, 255)</span>
 <span class="c1"># scale of the stimulus compared to normal text</span>
 <span class="na">stimulus_text_size_scale</span> <span class="o">=</span> <span class="s">6</span>
 <span class="c1"># scale of the input filed compared to normal text</span>
 <span class="na">input_text_size_scale</span> <span class="o">=</span> <span class="s">3</span>
+
+<span class="k">[ANDROID]</span>
+<span class="c1">## android specific configuration ##</span>
+<span class="c1"># offset of the input field (see above) as it might overlap</span>
+<span class="c1"># with the on-screen keyboard</span>
+<span class="na">input_offset</span> <span class="o">=</span> <span class="s">(0, 200)</span>
 </pre></div>
 
 
@@ -270,7 +283,7 @@ In the following, the default options are listed.</p>
 For a general overview on their configuration, see <a href="../../howto/logs/">here</a>.
 The available fields that can be logged are as follows:</p>
 <ul>
-<li>settings, resembling the input to the experiment: <code>reverse</code>, <code>starting_length</code>,</li>
+<li>settings, resembling the input to the experiment (may vary per block): <code>reverse</code>, <code>starting_length</code>, <code>trials</code>, <code>sequence_type</code></li>
 <li>computed data per trial: <code>sequence</code>, <code>sequence_length</code></li>
 <li>the user response: <code>user_input</code></li>
 <li>analyses of the user response<sup id="fnref:difflib"><a class="footnote-ref" href="#fn:difflib" rel="footnote">1</a></sup>:<ul>
